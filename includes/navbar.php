@@ -29,19 +29,18 @@
                     <span class="lang-en hidden">Contact</span>
                     <span class="lang-bn">যোগাযোগ</span>
                 </button>
-                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                <a href="/admin" class="nav-link" style="color: #14b8a6; font-size: 14px; font-weight: 700; text-decoration: none;">
-                    Dashboard
-                </a>
-                <a href="/logout" class="nav-link" style="color: #f87171; font-size: 14px; font-weight: 500; text-decoration: none;">
-                    Logout
-                </a>
-                <?php
-endif; ?>
             </div>
 
             <!-- Right controls -->
             <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Admin Login -->
+                <a href="<?php echo (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? '/admin' : '/login'; ?>" 
+                   class="hover-scale" 
+                   style="display: flex; align-items: center; justify-content: center; background: var(--surface); border: 1px solid var(--border); color: var(--text-primary); width: 36px; height: 36px; border-radius: 10px; cursor: pointer;" 
+                   title="<?php echo (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? 'Admin Dashboard' : 'Admin Login'; ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </a>
+
                 <!-- Theme toggle -->
                 <button id="theme-toggle" class="hover-scale" style="display: flex; align-items: center; justify-content: center; background: var(--surface); border: 1px solid var(--border); color: var(--text-primary); width: 36px; height: 36px; border-radius: 10px; cursor: pointer;" title="Toggle Theme">
                     <span id="icon-sun" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
