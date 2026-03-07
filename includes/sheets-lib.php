@@ -101,6 +101,7 @@ class GoogleSheetsDB
         }
         catch (Exception $e) {
             error_log("Google Sheets Error: " . $e->getMessage());
+            $this->initError = "Runtime Error: " . $e->getMessage();
             return [];
         }
     }
