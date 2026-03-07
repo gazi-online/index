@@ -301,9 +301,9 @@ function submitBooking() {
         .then(data => {
             if (!data.success) {
                 console.error('Booking sync failed:', data.error);
-                alert('[DEBUG-1] Warning: Connection to database failed. Error: ' + data.error);
+                alert('Warning: Connection to database failed. Error: ' + data.error);
             } else {
-                console.log('Booking synced to Google Sheets!');
+                console.log('Booking synced to Database!');
             }
         })
         .catch(err => {
@@ -348,7 +348,7 @@ function handleContactSubmit(e) {
             if (!data.success) {
                 console.error('Contact sync failed:', data.error);
             } else {
-                console.log('Contact synced to Google Sheets!');
+                console.log('Contact synced to Database!');
             }
         })
         .catch(err => {

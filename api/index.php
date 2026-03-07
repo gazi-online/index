@@ -36,8 +36,8 @@ if ($path === '/api/check') {
 }
 
 if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-  $bookings = $db->query("SELECT * FROM bookings ORDER BY created_at DESC");
-  $messages = $db->query("SELECT * FROM messages ORDER BY sent_at DESC");
+  $bookings = $db->query("SELECT id, name, service, phone, booking_date as date, booking_time as time, status FROM bookings ORDER BY created_at DESC");
+  $messages = $db->query("SELECT name, phone, sent_at as \"sentAt\", message FROM messages ORDER BY sent_at DESC");
 
   sendJSON([
     'bookings' => $bookings,
