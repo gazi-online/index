@@ -29,9 +29,13 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   // Format Bookings
   $bookings = [];
   if (!empty($bookingsRaw)) {
-    array_shift($bookingsRaw); // remove header
+    // Better header detection: if first column of first row is not numeric, assume it's a header
+    if (!is_numeric($bookingsRaw[0][0]) && $bookingsRaw[0][0] !== '') {
+      array_shift($bookingsRaw);
+    }
+
     foreach ($bookingsRaw as $row) {
-      if (count($row) < 7)
+      if (empty($row[0]))
         continue;
       $bookings[] = [
         'id' => $row[0] ?? '',
@@ -41,17 +45,21 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         'date' => $row[4] ?? '',
         'time' => $row[5] ?? '',
         'notes' => $row[6] ?? '',
-        'status' => $row[7] ?? 'pending',
+        'status' => !empty($row[7]) ? $row[7] : 'pending',
         'createdAt' => $row[8] ?? ''
       ];
     }
   }
 
-  // Format Messages
+  // Format Messages (Messages don't have numeric IDs, so we check "Name" header)
   $messages = [];
   if (!empty($messagesRaw)) {
-    array_shift($messagesRaw); // remove header
+    if (strtolower($messagesRaw[0][0]) === 'name') {
+      array_shift($messagesRaw);
+    }
     foreach ($messagesRaw as $row) {
+      if (empty($row[0]))
+        continue;
       $messages[] = [
         'name' => $row[0] ?? '',
         'phone' => $row[1] ?? '',
@@ -61,7 +69,15 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     }
   }
 
-  sendJSON(['bookings' => $bookings, 'messages' => $messages]);
+  sendJSON([
+    'bookings' => $bookings,
+    'messages' => $messages,
+    'configured' => $sheets->isConfigured(),
+    'debug' => [
+      'bookingsRawCount' => count($bookingsRaw),
+      'messagesRawCount' => count($messagesRaw)
+    ]
+  ]);
 }
 
 if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
