@@ -22,21 +22,21 @@ $time_slots = [
 $today = date('Y-m-d');
 ?>
 <div id="booking-dialog" class="modal-overlay hidden" style="opacity: 1;" onclick="if(event.target === this) toggleBookingModal(false)">
-    <div id="booking-modal-content" style="background: linear-gradient(180deg, #0d2320 0%, #071a18 100%); border: 1px solid rgba(255,255,255,0.12); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
+    <div id="booking-modal-content" style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
         <!-- Header -->
-        <div style="padding: 28px 28px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: linear-gradient(180deg, #0d2320 0%, rgba(13,35,32,0) 100%);">
+        <div style="padding: 28px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: var(--bg-main);">
             <div>
-                <h2 style="font-size: 20px; font-weight: 800; color: #f0fdf4; margin-bottom: 4px;">
+                <h2 style="font-size: 20px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">
                     📅 
                     <span class="lang-en hidden">Book Appointment</span>
                     <span class="lang-bn">অ্যাপয়েন্টমেন্ট বুক করুন</span>
                 </h2>
-                <p style="font-size: 13px; color: rgba(255,255,255,0.5);">
+                <p style="font-size: 13px; color: var(--text-secondary);">
                     <span class="lang-en hidden">Gazi Online · Paikpara</span>
                     <span class="lang-bn">গাজী অনলাইন · পাইকপাড়া</span>
                 </p>
             </div>
-            <button onclick="toggleBookingModal(false)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 8px; color: rgba(255,255,255,0.6); cursor: pointer;">
+            <button onclick="toggleBookingModal(false)" style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; color: var(--text-secondary); cursor: pointer;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
         </div>
@@ -50,7 +50,7 @@ $today = date('Y-m-d');
                     <span class="lang-en hidden">Appointment Booked!</span>
                     <span class="lang-bn">অ্যাপয়েন্টমেন্ট নিশ্চিত!</span>
                 </h3>
-                <p style="color: rgba(255,255,255,0.65); font-size: 14px; line-height: 1.7; margin-bottom: 24px;" id="booking-success-msg"></p>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.7; margin-bottom: 24px;" id="booking-success-msg"></p>
                 <button onclick="toggleBookingModal(false)" class="btn-primary" style="width: 100%; justify-content: center;">
                     <span class="lang-en hidden">Done</span>
                     <span class="lang-bn">সম্পন্ন</span>
@@ -62,13 +62,13 @@ $today = date('Y-m-d');
                 <!-- Progress -->
                 <div style="display: flex; gap: 8px; margin-bottom: 28px;">
                     <div id="prog-1" style="flex: 1; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #0F766E, #1D4ED8); transition: background 0.3s;"></div>
-                    <div id="prog-2" style="flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.1); transition: background 0.3s;"></div>
-                    <div id="prog-3" style="flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.1); transition: background 0.3s;"></div>
+                    <div id="prog-2" style="flex: 1; height: 4px; border-radius: 4px; background: var(--surface); transition: background 0.3s;"></div>
+                    <div id="prog-3" style="flex: 1; height: 4px; border-radius: 4px; background: var(--surface); transition: background 0.3s;"></div>
                 </div>
 
                 <!-- Step 1 -->
                 <div id="booking-step-1" class="booking-step">
-                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #f0fdf4;">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
                         <span class="lang-en hidden">Your Details</span>
                         <span class="lang-bn">আপনার তথ্য</span>
                     </h3>
@@ -99,7 +99,7 @@ $today = date('Y-m-d');
 
                 <!-- Step 2 -->
                 <div id="booking-step-2" class="booking-step hidden">
-                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #f0fdf4;">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
                         <span class="lang-en hidden">Choose Date & Time</span>
                         <span class="lang-bn">তারিখ ও সময় বেছে নিন</span>
                     </h3>
@@ -125,12 +125,12 @@ $today = date('Y-m-d');
 
                 <!-- Step 3 -->
                 <div id="booking-step-3" class="booking-step hidden">
-                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: #f0fdf4;">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text-primary);">
                         <span class="lang-en hidden">Confirm Details</span>
                         <span class="lang-bn">বিবরণ নিশ্চিত করুন</span>
                     </h3>
 
-                    <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; margin-bottom: 16px;">
+                    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px;">
                         <div class="confirm-row"><span class="confirm-label lang-en hidden">Name</span><span class="confirm-label lang-bn">নাম</span> <span id="conf-name" class="confirm-val"></span></div>
                         <div class="confirm-row"><span class="confirm-label lang-en hidden">Phone</span><span class="confirm-label lang-bn">ফোন</span> <span id="conf-phone" class="confirm-val"></span></div>
                         <div class="confirm-row"><span class="confirm-label lang-en hidden">Service</span><span class="confirm-label lang-bn">সেবা</span> <span id="conf-service" class="confirm-val"></span></div>
@@ -165,24 +165,24 @@ $today = date('Y-m-d');
     
     <style>
         .booking-input {
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 12px; padding: 12px 16px; color: #f0fdf4; font-size: 14px; outline: none; box-sizing: border-box; font-family: 'Inter', sans-serif;
+            width: 100%; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 12px 16px; color: var(--text-primary); font-size: 14px; outline: none; box-sizing: border-box; font-family: 'Inter', sans-serif;
         }
         .booking-label {
-            display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.65); margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;
         }
         .time-slot-btn {
-            padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); transition: all 0.2s;
+            padding: 8px 4px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+            background: var(--surface); color: var(--text-secondary); transition: all 0.2s;
         }
         .time-slot-btn.selected {
             border-color: #0F766E; background: linear-gradient(135deg, rgba(15,118,110,0.4), rgba(29,78,216,0.2)); color: #14b8a6;
         }
         .confirm-row {
-            display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px;
+            display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px;
         }
-        .confirm-label { color: rgba(255,255,255,0.5); }
-        .confirm-val { color: #f0fdf4; font-weight: 600; }
+        .confirm-label { color: var(--text-secondary); }
+        .confirm-val { color: var(--text-primary); font-weight: 600; }
         .booking-step { animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     </style>

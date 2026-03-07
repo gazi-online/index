@@ -4,16 +4,16 @@ include_once __DIR__ . '/db.php';
 $db = new Database();
 $isConnected = $db->isConnected();
 ?>
-<div style="min-height: 100vh; background: #070e0d; color: #f0fdf4;">
+<div style="min-height: 100vh; background: var(--bg-main); color: var(--text-primary);">
     <!-- Sidebar / Topbar -->
-    <div style="padding: 24px 40px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+    <div style="padding: 24px 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 16px;">
             <div style="padding: 8px; background: rgba(20,184,166,0.1); border-radius: 12px;">
                 <img src="/logo.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;">
             </div>
             <div>
                 <h1 style="font-size: 18px; font-weight: 800;">Admin Dashboard</h1>
-                <p style="font-size: 12px; color: rgba(255,255,255,0.4);">
+                <p style="font-size: 12px; color: var(--text-secondary);">
                     <?php
 if ($isConnected) {
     echo '<span style="color: #10b981;">🟢 Connected to PostgreSQL (Supabase)</span>';
@@ -34,7 +34,7 @@ else {
         </div>
         
         <div style="display: flex; align-items: center; gap: 20px;">
-            <a href="/" style="font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none;" class="hover-scale">View Site</a>
+            <a href="/" style="font-size: 13px; color: var(--text-secondary); text-decoration: none;" class="hover-scale">View Site</a>
             <a href="/logout" style="padding: 10px 20px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); color: #f87171; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;" class="hover-scale">Logout</a>
         </div>
     </div>
@@ -43,19 +43,19 @@ else {
         <!-- Stats Row -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 40px;">
             <div class="glass" style="padding: 24px;">
-                <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Total Bookings</p>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Total Bookings</p>
                 <div style="display: flex; align-items: baseline; gap: 12px;">
                     <span style="font-size: 32px; font-weight: 800; color: #14b8a6;" id="stat-bookings">0</span>
                 </div>
             </div>
             <div class="glass" style="padding: 24px;">
-                <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Messages</p>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Messages</p>
                 <div style="display: flex; align-items: baseline; gap: 12px;">
                     <span style="font-size: 32px; font-weight: 800; color: #3b82f6;" id="stat-messages">0</span>
                 </div>
             </div>
             <div class="glass" style="padding: 24px;">
-                <p style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Success Rate</p>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Success Rate</p>
                 <div style="display: flex; align-items: baseline; gap: 12px;">
                     <span style="font-size: 32px; font-weight: 800; color: #F59E0B;" id="stat-success">0%</span>
                 </div>
@@ -66,7 +66,7 @@ else {
         <div style="display: grid; grid-template-columns: 1fr; gap: 32px;">
             <!-- Recent Bookings -->
             <div class="glass" style="padding: 0; overflow: hidden;">
-                <div style="padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+                <div style="padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
                     <h3 style="font-size: 18px; font-weight: 700;">📂 Booking Management</h3>
                     <div style="display: flex; gap: 10px;">
                         <button id="refresh-btn" class="btn-secondary" style="padding: 8px 16px; font-size: 12px;" onclick="renderAdminData()">Refresh Data</button>
@@ -75,7 +75,7 @@ else {
                 <div style="overflow-x: auto; padding: 10px;">
                     <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
                         <thead>
-                            <tr style="color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <tr style="color: var(--text-secondary); border-bottom: 1px solid var(--border);">
                                 <th style="padding: 16px; font-weight: 600;">Client & Service</th>
                                 <th style="padding: 16px; font-weight: 600;">Schedule</th>
                                 <th style="padding: 16px; font-weight: 600; width: 250px;">Status & Progress</th>
@@ -92,7 +92,7 @@ else {
 
             <!-- Recent Messages -->
             <div class="glass" style="padding: 0; overflow: hidden;">
-                <div style="padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="padding: 24px 32px; border-bottom: 1px solid var(--border);">
                     <h3 style="font-size: 18px; font-weight: 700;">💬 Contact Submissions</h3>
                 </div>
                 <div id="admin-messages-container" style="padding: 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
@@ -105,16 +105,16 @@ else {
 
 <style>
 .status-pill { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; }
-.status-pending { background: rgba(255,255,255,0.05); color: #94a3b8; border-color: rgba(255,255,255,0.1); }
+.status-pending { background: var(--surface); color: var(--text-secondary); border-color: var(--border); }
 .status-review { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
 .status-accepted { background: rgba(245,158,11,0.1); color: #fbbf24; border-color: rgba(245,158,11,0.2); }
 .status-success { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.2); }
 .status-rejected { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.2); }
 
-.progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 8px; overflow: hidden; position: relative; }
+.progress-track { width: 100%; height: 6px; background: var(--surface); border-radius: 10px; margin-top: 8px; overflow: hidden; position: relative; }
 .progress-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease, background-color 0.5s ease; }
 
-.action-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; transition: all 0.2s; min-width: 32px; text-align: center; }
+.action-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; transition: all 0.2s; min-width: 32px; text-align: center; }
 .action-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2); }
 .action-btn.active { background: #14b8a6; color: white; border-color: #14b8a6; }
 

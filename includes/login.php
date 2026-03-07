@@ -1,14 +1,14 @@
 <?php
 // login.php - Admin Login Interface
 ?>
-<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle at top right, #0d2320, #070e0d);">
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg-main);">
     <div class="glass reveal reveal-up" style="max-width: 400px; width: 100%; padding: 40px; border-radius: 24px; text-align: center;">
         <div style="margin-bottom: 32px;">
             <div style="width: 80px; height: 80px; background: rgba(20,184,166,0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
                 <img src="/logo.png" alt="Logo" style="width: 50px; height: 50px; object-fit: contain;">
             </div>
-            <h2 style="font-size: 24px; font-weight: 800; color: #f0fdf4;">Admin Login</h2>
-            <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 8px;">Gazi Online Management Portal</p>
+            <h2 style="font-size: 24px; font-weight: 800; color: var(--text-primary);">Admin Login</h2>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px;">Gazi Online Management Portal</p>
         </div>
 
         <?php if (isset($login_error)): ?>
@@ -21,12 +21,12 @@ endif; ?>
 
         <form action="/login" method="POST" style="text-align: left;">
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Username</label>
-                <input type="text" name="username" required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px 16px; color: white; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#14b8a6'">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Username</label>
+                <input type="text" name="username" required style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
             </div>
             <div style="margin-bottom: 32px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px;">Password</label>
-                <input type="password" name="password" required style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px 16px; color: white; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#14b8a6'">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Password</label>
+                <input type="password" name="password" required style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
             </div>
             
             <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px;">
@@ -35,7 +35,7 @@ endif; ?>
             </button>
         </form>
 
-        <p style="margin-top: 32px; font-size: 13px; color: rgba(255,255,255,0.3);">
+        <p style="margin-top: 32px; font-size: 13px; color: var(--text-secondary); opacity: 0.5;">
             &copy; <?php echo date('Y'); ?> Gazi Online Center. All rights reserved.
         </p>
     </div>
