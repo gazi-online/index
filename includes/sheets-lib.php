@@ -23,15 +23,29 @@ class GoogleSheetsDB
             return;
         }
 
+        // Sanitize credentials JSON (Vercel sometimes adds quotes or escapes)
+        $credentialsJson = trim($credentialsJson);
+        // Remove surrounding quotes if present
+        if (preg_match('/^["\'](.*)["\']$/s', $credentialsJson, $matches)) {
+            $credentialsJson = $matches[1];
+        }
+        // Decode escaped characters (like \n or \")
+        $decoded = json_decode($credentialsJson, true);
+        if ($decoded === null) {
+            // Try unescaping if first attempt failed
+            $credentialsJson = str_replace(['\\n', '\\"'], ["\n", '"'], $credentialsJson);
+            $decoded = json_encode(json_decode($credentialsJson, true), true); // Re-validate
+            $decoded = json_decode($credentialsJson, true);
+        }
+
         try {
-            $creds = json_decode($credentialsJson, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if ($decoded === null) {
                 $this->initError = "Invalid JSON in GOOGLE_CREDENTIALS: " . json_last_error_msg();
                 return;
             }
 
             $client = new \Google\Client();
-            $client->setAuthConfig($creds);
+            $client->setAuthConfig($decoded);
             $client->addScope(\Google\Service\Sheets::SPREADSHEETS);
             $this->service = new \Google\Service\Sheets($client);
         }
