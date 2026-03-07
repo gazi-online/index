@@ -1,7 +1,9 @@
 <?php
 // Main entry point for Gazi Online PHP version
 session_start();
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED); // Suppress warnings for clean UI
+ini_set('display_errors', '0'); // CRITICAL: Prevents warnings from corrupting JSON
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
+
 include_once __DIR__ . '/../includes/sheets-lib.php';
 $sheets = new GoogleSheetsDB();
 
