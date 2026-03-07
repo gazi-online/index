@@ -296,9 +296,21 @@ function submitBooking() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(finalData)
-    });
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                console.error('Booking sync failed:', data.error);
+                alert('Warning: Connection to database failed. However, your request is saved locally. Error: ' + data.error);
+            } else {
+                console.log('Booking synced to Google Sheets!');
+            }
+        })
+        .catch(err => {
+            console.error('Network error during booking sync:', err);
+        });
 
-    // Show success
+    // Show success (current UI assumes success for UX, but now we log background failures)
     document.getElementById('booking-form-container').classList.add('hidden');
     const successMsg = document.getElementById('booking-success-msg');
 
@@ -330,7 +342,18 @@ function handleContactSubmit(e) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(finalData)
-    });
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                console.error('Contact sync failed:', data.error);
+            } else {
+                console.log('Contact synced to Google Sheets!');
+            }
+        })
+        .catch(err => {
+            console.error('Network error during contact sync:', err);
+        });
 
     // Show success state
     document.getElementById('contact-form').classList.add('hidden');
