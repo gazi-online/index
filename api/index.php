@@ -72,11 +72,7 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   sendJSON([
     'bookings' => $bookings,
     'messages' => $messages,
-    'configured' => $sheets->isConfigured(),
-    'debug' => [
-      'bookingsRawCount' => count($bookingsRaw),
-      'messagesRawCount' => count($messagesRaw)
-    ]
+    'configured' => $sheets->isConfigured()
   ]);
 }
 
