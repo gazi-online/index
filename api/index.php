@@ -66,34 +66,40 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
+  $success = false;
+  $error = "Sheets not configured";
   if ($sheets->isConfigured()) {
-    $sheets->appendRow('Bookings', [
+    $res = $sheets->appendRow('Bookings', [
       $data['id'], $data['name'], $data['phone'], $data['service'],
       $data['date'], $data['time'], $data['notes'], 'pending', date('Y-m-d H:i:s')
     ]);
+    $success = ($res === true);
+    $error = ($res === true) ? null : $res;
   }
-  echo json_encode(['success' => true]);
-  exit;
+  sendJSON(['success' => $success, 'error' => $error]);
 }
 
 if ($path === '/api/contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
+  $success = false;
+  $error = "Sheets not configured";
   if ($sheets->isConfigured()) {
-    $sheets->appendRow('Messages', [
+    $res = $sheets->appendRow('Messages', [
       $data['name'], $data['phone'], $data['message'], date('Y-m-d H:i:s')
     ]);
+    $success = ($res === true);
+    $error = ($res === true) ? null : $res;
   }
-  echo json_encode(['success' => true]);
-  exit;
+  sendJSON(['success' => $success, 'error' => $error]);
 }
 
 if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
+  $success = false;
   if ($sheets->isConfigured()) {
-    $sheets->updateStatus('Bookings', $data['id'], $data['status']);
+    $success = $sheets->updateStatus('Bookings', $data['id'], $data['status']);
   }
-  echo json_encode(['success' => true]);
-  exit;
+  sendJSON(['success' => $success]);
 }
 
 $activePage = 'home';

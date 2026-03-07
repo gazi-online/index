@@ -14,13 +14,24 @@ class GoogleSheetsDB
         $this->spreadsheetId = getenv('GOOGLE_SPREADSHEET_ID');
 
         if (!$credentialsJson || !$this->spreadsheetId) {
-            return; // Not configured yet
+            return;
         }
 
-        $client = new \Google\Client();
-        $client->setAuthConfig(json_decode($credentialsJson, true));
-        $client->addScope(\Google\Service\Sheets::SPREADSHEETS);
-        $this->service = new \Google\Service\Sheets($client);
+        try {
+            $creds = json_decode($credentialsJson, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("Google Sheets Error: Invalid JSON in GOOGLE_CREDENTIALS");
+                return;
+            }
+
+            $client = new \Google\Client();
+            $client->setAuthConfig($creds);
+            $client->addScope(\Google\Service\Sheets::SPREADSHEETS);
+            $this->service = new \Google\Service\Sheets($client);
+        }
+        catch (Exception $e) {
+            error_log("Google Sheets Init Error: " . $e->getMessage());
+        }
     }
 
     public function isConfigured()
@@ -43,8 +54,8 @@ class GoogleSheetsDB
             return true;
         }
         catch (Exception $e) {
-            error_log("Google Sheets Error: " . $e->getMessage());
-            return false;
+            error_log("Google Sheets Append Error (" . $sheetName . "): " . $e->getMessage());
+            return $e->getMessage(); // Return the error message itself for debugging
         }
     }
 
