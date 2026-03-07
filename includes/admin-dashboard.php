@@ -1,8 +1,8 @@
 <?php
 // admin-dashboard.php - Enhanced Admin Management Interface
-include_once __DIR__ . '/sheets-lib.php';
-$sheets = new GoogleSheetsDB();
-$isSheetsConfigured = $sheets->isConfigured();
+include_once __DIR__ . '/db.php';
+$db = new Database();
+$isConnected = $db->isConnected();
 ?>
 <div style="min-height: 100vh; background: #070e0d; color: #f0fdf4;">
     <!-- Sidebar / Topbar -->
@@ -15,17 +15,17 @@ $isSheetsConfigured = $sheets->isConfigured();
                 <h1 style="font-size: 18px; font-weight: 800;">Admin Dashboard</h1>
                 <p style="font-size: 12px; color: rgba(255,255,255,0.4);">
                     <?php
-if ($isSheetsConfigured) {
-    echo '<span style="color: #10b981;">🟢 Connected to Google Sheets</span>';
+if ($isConnected) {
+    echo '<span style="color: #10b981;">🟢 Connected to PostgreSQL (Supabase)</span>';
 }
 else {
-    $error = $sheets->getInitError();
+    $error = $db->getError();
     echo '<span style="color: #f59e0b;">🟠 Using Local Storage</span>';
     if ($error) {
         echo '<br><span style="color: #f87171; font-size: 10px; opacity: 0.8;">Error: ' . htmlspecialchars($error) . '</span>';
     }
     else {
-        echo '<br><span style="font-size: 10px; opacity: 0.6;">(Setup Google Sheets for shared data)</span>';
+        echo '<br><span style="font-size: 10px; opacity: 0.6;">(Database connection failed)</span>';
     }
 }
 ?>
@@ -131,7 +131,7 @@ const STATUS_CONFIG = {
     'rejected': { label: 'Reject!', icon: '❌', progress: 100, class: 'status-rejected', color: '#ef4444' }
 };
 
-const IS_SHEETS_CONFIGURED = <?php echo $isSheetsConfigured ? 'true' : 'false'; ?>;
+const IS_DB_CONNECTED = <?php echo $isConnected ? 'true' : 'false'; ?>;
 
 async function renderAdminData() {
     const refreshBtn = document.getElementById('refresh-btn');
@@ -141,7 +141,7 @@ async function renderAdminData() {
     let bookings = JSON.parse(localStorage.getItem('appointments') || '[]');
     let messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
 
-    if (IS_SHEETS_CONFIGURED) {
+    if (IS_DB_CONNECTED) {
         try {
             const resp = await fetch('/api/get-data'); // We need to add this endpoint
             const data = await resp.json();
@@ -228,7 +228,7 @@ async function renderAdminData() {
 }
 
 async function updateBookingStatus(id, newStatus) {
-    if (IS_SHEETS_CONFIGURED) {
+    if (IS_DB_CONNECTED) {
         await fetch('/api/update-status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

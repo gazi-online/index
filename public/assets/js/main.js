@@ -301,7 +301,7 @@ function submitBooking() {
         .then(data => {
             if (!data.success) {
                 console.error('Booking sync failed:', data.error);
-                alert('Warning: Connection to database failed. However, your request is saved locally. Error: ' + data.error);
+                alert('[DEBUG-1] Warning: Connection to database failed. Error: ' + data.error);
             } else {
                 console.log('Booking synced to Google Sheets!');
             }

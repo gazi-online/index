@@ -5,8 +5,12 @@ session_start();
 ini_set('display_errors', '0'); // CRITICAL: Prevents warnings from corrupting JSON
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 
-include_once __DIR__ . '/../includes/sheets-lib.php';
-$sheets = new GoogleSheetsDB();
+include_once __DIR__ . '/../includes/db.php';
+$db = new Database();
+
+// Fallback for sheets (optional, if you still want to keep it as a backup)
+// include_once __DIR__ . '/../includes/sheets-lib.php';
+// $sheets = new GoogleSheetsDB();
 
 // Simple Routing Logic
 $request_uri = $_SERVER['REQUEST_URI'];
@@ -22,72 +26,40 @@ function sendJSON($data)
 }
 
 // API Endpoints
+if ($path === '/api/check') {
+  sendJSON([
+    'status' => 'success',
+    'message' => 'API is active and updated!',
+    'time' => date('Y-m-d H:i:s'),
+    'database' => 'PostgreSQL (Supabase)'
+  ]);
+}
+
 if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-  $bookingsRaw = $sheets->getRows('Bookings');
-  $messagesRaw = $sheets->getRows('Messages');
-
-  // Format Bookings
-  $bookings = [];
-  if (!empty($bookingsRaw)) {
-    // Better header detection: if first column of first row is not numeric, assume it's a header
-    if (!is_numeric($bookingsRaw[0][0]) && $bookingsRaw[0][0] !== '') {
-      array_shift($bookingsRaw);
-    }
-
-    foreach ($bookingsRaw as $row) {
-      if (empty($row[0]))
-        continue;
-      $bookings[] = [
-        'id' => $row[0] ?? '',
-        'name' => $row[1] ?? '',
-        'phone' => $row[2] ?? '',
-        'service' => $row[3] ?? '',
-        'date' => $row[4] ?? '',
-        'time' => $row[5] ?? '',
-        'notes' => $row[6] ?? '',
-        'status' => !empty($row[7]) ? $row[7] : 'pending',
-        'createdAt' => $row[8] ?? ''
-      ];
-    }
-  }
-
-  // Format Messages (Messages don't have numeric IDs, so we check "Name" header)
-  $messages = [];
-  if (!empty($messagesRaw)) {
-    if (strtolower($messagesRaw[0][0]) === 'name') {
-      array_shift($messagesRaw);
-    }
-    foreach ($messagesRaw as $row) {
-      if (empty($row[0]))
-        continue;
-      $messages[] = [
-        'name' => $row[0] ?? '',
-        'phone' => $row[1] ?? '',
-        'message' => $row[2] ?? '',
-        'sentAt' => $row[3] ?? ''
-      ];
-    }
-  }
+  $bookings = $db->query("SELECT * FROM bookings ORDER BY created_at DESC");
+  $messages = $db->query("SELECT * FROM messages ORDER BY sent_at DESC");
 
   sendJSON([
     'bookings' => $bookings,
     'messages' => $messages,
-    'configured' => $sheets->isConfigured()
+    'configured' => $db->isConnected()
   ]);
 }
 
 if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
   $success = false;
-  $error = $sheets->getInitError() ?: "Sheets not configured";
+  $error = $db->getError() ?: "Database not connected";
 
-  if ($sheets->isConfigured()) {
-    $res = $sheets->appendRow('Bookings', [
-      $data['id'], $data['name'], $data['phone'], $data['service'],
-      $data['date'], $data['time'], $data['notes'], 'pending', date('Y-m-d H:i:s')
-    ]);
-    $success = ($res === true);
-    $error = ($res === true) ? null : $res;
+  if ($db->isConnected()) {
+    $success = $db->execute(
+      "INSERT INTO bookings (id, name, phone, service, booking_date, booking_time, notes, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        $data['id'], $data['name'], $data['phone'], $data['service'],
+        $data['date'], $data['time'], $data['notes'], 'pending', date('Y-m-d H:i:s')
+      ]
+    );
+    $error = $success ? null : "Failed to record booking.";
   }
   sendJSON(['success' => $success, 'error' => $error]);
 }
@@ -95,13 +67,15 @@ if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($path === '/api/contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
   $success = false;
-  $error = "Sheets not configured";
-  if ($sheets->isConfigured()) {
-    $res = $sheets->appendRow('Messages', [
-      $data['name'], $data['phone'], $data['message'], date('Y-m-d H:i:s')
-    ]);
-    $success = ($res === true);
-    $error = ($res === true) ? null : $res;
+  $error = $db->getError() ?: "Database not connected";
+  if ($db->isConnected()) {
+    $success = $db->execute(
+      "INSERT INTO messages (name, phone, message, sent_at) VALUES (?, ?, ?, ?)",
+      [
+        $data['name'], $data['phone'], $data['message'], date('Y-m-d H:i:s')
+      ]
+    );
+    $error = $success ? null : "Failed to send message.";
   }
   sendJSON(['success' => $success, 'error' => $error]);
 }
@@ -109,8 +83,11 @@ if ($path === '/api/contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
   $success = false;
-  if ($sheets->isConfigured()) {
-    $success = $sheets->updateStatus('Bookings', $data['id'], $data['status']);
+  if ($db->isConnected()) {
+    $success = $db->execute(
+      "UPDATE bookings SET status = ? WHERE id = ?",
+      [$data['status'], $data['id']]
+    );
   }
   sendJSON(['success' => $success]);
 }
