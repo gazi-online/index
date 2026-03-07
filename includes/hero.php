@@ -56,7 +56,8 @@ $hero_services = [
                     <span class="lang-en hidden"><?php echo $s['en']; ?></span>
                     <span class="lang-bn"><?php echo $s['bn']; ?></span>
                 </div>
-                <?php endforeach; ?>
+                <?php
+endforeach; ?>
             </div>
         </div>
 
@@ -83,7 +84,7 @@ $hero_services = [
             </a>
         </div>
 
-        <?php include 'includes/trust-badges.php'; ?>
+        <?php include __DIR__ . '/trust-badges.php'; ?>
     </div>
 
     <!-- Scroll indicator -->
