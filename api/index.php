@@ -1,10 +1,88 @@
 <?php
 // Main entry point for Gazi Online PHP version
 session_start();
+include_once __DIR__ . '/../includes/sheets-lib.php';
+$sheets = new GoogleSheetsDB();
 
 // Simple Routing Logic
 $request_uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($request_uri, PHP_URL_PATH);
+
+// API Endpoints
+if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+  $bookingsRaw = $sheets->getRows('Bookings');
+  $messagesRaw = $sheets->getRows('Messages');
+
+  // Format Bookings
+  $bookings = [];
+  if (!empty($bookingsRaw)) {
+    array_shift($bookingsRaw); // remove header
+    foreach ($bookingsRaw as $row) {
+      if (count($row) < 7)
+        continue;
+      $bookings[] = [
+        'id' => $row[0] ?? '',
+        'name' => $row[1] ?? '',
+        'phone' => $row[2] ?? '',
+        'service' => $row[3] ?? '',
+        'date' => $row[4] ?? '',
+        'time' => $row[5] ?? '',
+        'notes' => $row[6] ?? '',
+        'status' => $row[7] ?? 'pending',
+        'createdAt' => $row[8] ?? ''
+      ];
+    }
+  }
+
+  // Format Messages
+  $messages = [];
+  if (!empty($messagesRaw)) {
+    array_shift($messagesRaw); // remove header
+    foreach ($messagesRaw as $row) {
+      $messages[] = [
+        'name' => $row[0] ?? '',
+        'phone' => $row[1] ?? '',
+        'message' => $row[2] ?? '',
+        'sentAt' => $row[3] ?? ''
+      ];
+    }
+  }
+
+  echo json_encode(['bookings' => $bookings, 'messages' => $messages]);
+  exit;
+}
+
+if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  if ($sheets->isConfigured()) {
+    $sheets->appendRow('Bookings', [
+      $data['id'], $data['name'], $data['phone'], $data['service'],
+      $data['date'], $data['time'], $data['notes'], 'pending', date('Y-m-d H:i:s')
+    ]);
+  }
+  echo json_encode(['success' => true]);
+  exit;
+}
+
+if ($path === '/api/contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  if ($sheets->isConfigured()) {
+    $sheets->appendRow('Messages', [
+      $data['name'], $data['phone'], $data['message'], date('Y-m-d H:i:s')
+    ]);
+  }
+  echo json_encode(['success' => true]);
+  exit;
+}
+
+if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  if ($sheets->isConfigured()) {
+    $sheets->updateStatus('Bookings', $data['id'], $data['status']);
+  }
+  echo json_encode(['success' => true]);
+  exit;
+}
 
 $activePage = 'home';
 $language = 'bn'; // default language

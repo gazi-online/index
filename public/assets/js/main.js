@@ -90,7 +90,7 @@ window.addEventListener('scroll', () => {
 // === Mobile Menu ===
 function toggleMobileMenu(forceState) {
     isMenuOpen = forceState !== undefined ? forceState : !isMenuOpen;
-    
+
     if (isMenuOpen) {
         mobileMenu.style.maxHeight = '500px';
         mobileMenu.classList.remove('opacity-0');
@@ -144,7 +144,7 @@ const bookingData = { name: '', phone: '', service: '', date: '', time: '', note
 function toggleBookingModal(show) {
     const modal = document.getElementById('booking-dialog');
     if (!modal) return;
-    
+
     if (show) {
         modal.classList.remove('hidden');
         setTimeout(() => modal.style.opacity = '1', 10);
@@ -183,25 +183,25 @@ function clearErrors() {
 function validateStep() {
     clearErrors();
     let isValid = true;
-    
+
     if (bookingStep === 1) {
         const name = document.getElementById('bk-name').value;
         const phone = document.getElementById('bk-phone').value;
         const service = document.getElementById('bk-service').value;
-        
+
         if (!name.trim()) { showError('name', currentLanguage === 'en' ? 'Name required' : 'নাম আবশ্যক'); isValid = false; }
         if (!/^\d{10}$/.test(phone)) { showError('phone', currentLanguage === 'en' ? 'Valid 10-digit number required' : 'সঠিক ১০ সংখ্যার নম্বর আবশ্যক'); isValid = false; }
         if (!service) { showError('service', currentLanguage === 'en' ? 'Select a service' : 'সেবা বেছে নিন'); isValid = false; }
-        
+
         if (isValid) { bookingData.name = name; bookingData.phone = phone; bookingData.service = service; }
     } else if (bookingStep === 2) {
         const date = document.getElementById('bk-date').value;
         if (!date) { showError('date', currentLanguage === 'en' ? 'Pick a date' : 'তারিখ বেছে নিন'); isValid = false; }
         if (!bookingData.time) { showError('time', currentLanguage === 'en' ? 'Pick a time slot' : 'সময় বেছে নিন'); isValid = false; }
-        
+
         if (isValid) { bookingData.date = date; }
     }
-    
+
     return isValid;
 }
 
@@ -226,13 +226,13 @@ function selectTimeSlot(btn) {
 
 function updateBookingUI() {
     // Progress bar
-    for(let i=1; i<=3; i++) {
+    for (let i = 1; i <= 3; i++) {
         const prog = document.getElementById('prog-' + i);
         if (prog) prog.style.background = i <= bookingStep ? 'linear-gradient(90deg, #0F766E, #1D4ED8)' : 'rgba(255,255,255,0.1)';
     }
-    
+
     // Steps visibility
-    for(let i=1; i<=3; i++) {
+    for (let i = 1; i <= 3; i++) {
         const stepEl = document.getElementById('booking-step-' + i);
         if (stepEl) {
             if (i === bookingStep) {
@@ -242,25 +242,25 @@ function updateBookingUI() {
             }
         }
     }
-    
+
     // Buttons
     const btnBack = document.getElementById('btn-back');
     const btnNext = document.getElementById('btn-next');
     const btnSubmit = document.getElementById('btn-submit');
-    
+
     if (bookingStep > 1) {
         btnBack.classList.remove('hidden');
     } else {
         btnBack.classList.add('hidden');
     }
-    
+
     if (bookingStep < 3) {
         btnNext.classList.remove('hidden');
         btnSubmit.classList.add('hidden');
     } else {
         btnNext.classList.add('hidden');
         btnSubmit.classList.remove('hidden');
-        
+
         // Populate confirm step
         document.getElementById('conf-name').textContent = bookingData.name;
         document.getElementById('conf-phone').textContent = bookingData.phone;
@@ -284,43 +284,59 @@ function bookingBack() {
 
 function submitBooking() {
     bookingData.notes = document.getElementById('bk-notes').value;
-    
-    // Mock save
+    const finalData = { ...bookingData, id: Date.now(), status: 'pending', createdAt: new Date().toISOString() };
+
+    // Save to localStorage (User's copy)
     const appts = JSON.parse(localStorage.getItem('appointments') || '[]');
-    appts.push({ ...bookingData, id: Date.now(), status: 'pending', createdAt: new Date().toISOString() });
+    appts.push(finalData);
     localStorage.setItem('appointments', JSON.stringify(appts));
-    
+
+    // Send to Google Sheets via API
+    fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(finalData)
+    });
+
     // Show success
     document.getElementById('booking-form-container').classList.add('hidden');
     const successMsg = document.getElementById('booking-success-msg');
-    
+
     if (currentLanguage === 'en') {
         successMsg.textContent = `We'll call ${bookingData.phone} to confirm your appointment for ${bookingData.service} on ${bookingData.date} at ${bookingData.time}.`;
     } else {
         successMsg.textContent = `${bookingData.service} এর জন্য ${bookingData.date} তারিখে ${bookingData.time} সময়ে আপনার অ্যাপয়েন্টমেন্ট নিশ্চিত করতে ${bookingData.phone} নম্বরে কল করা হবে।`;
     }
-    
+
     document.getElementById('booking-success').classList.remove('hidden');
 }
 
 // === Contact Form Logic ===
 function handleContactSubmit(e) {
     e.preventDefault();
-    
+
     const name = document.getElementById('contact-name').value;
     const phone = document.getElementById('contact-phone').value;
     const message = document.getElementById('contact-message').value;
-    
+    const finalData = { name, phone, message, sentAt: new Date().toISOString() };
+
     // Save to localStorage as mock backend
     const msgs = JSON.parse(localStorage.getItem('contact_messages') || '[]');
-    msgs.push({ name, phone, message, sentAt: new Date().toISOString() });
+    msgs.push(finalData);
     localStorage.setItem('contact_messages', JSON.stringify(msgs));
-    
+
+    // Send to Google Sheets via API
+    fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(finalData)
+    });
+
     // Show success state
     document.getElementById('contact-form').classList.add('hidden');
     document.getElementById('contact-success').classList.remove('hidden');
-    
-    setTimeout(() => { 
+
+    setTimeout(() => {
         document.getElementById('contact-success').classList.add('hidden');
         document.getElementById('contact-form').classList.remove('hidden');
         document.getElementById('contact-form').reset();
@@ -331,20 +347,20 @@ function handleContactSubmit(e) {
 function initServiceFiltering() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const serviceCards = document.querySelectorAll('.service-card');
-    
+
     if (!filterBtns.length) return;
-    
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             // Update active state
             filterBtns.forEach(b => b.classList.remove('active-filter'));
             btn.classList.add('active-filter');
-            
+
             const filterValue = btn.getAttribute('data-filter');
-            
+
             serviceCards.forEach(card => {
                 const isMatch = filterValue === 'all' || card.getAttribute('data-cat') === filterValue;
-                
+
                 if (isMatch) {
                     card.style.display = 'block';
                     // Re-trigger animation

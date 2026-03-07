@@ -55,7 +55,7 @@ $isSheetsConfigured = $sheets->isConfigured();
                 <div style="padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
                     <h3 style="font-size: 18px; font-weight: 700;">📂 Booking Management</h3>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-secondary" style="padding: 8px 16px; font-size: 12px;" onclick="renderAdminData()">Refresh Data</button>
+                        <button id="refresh-btn" class="btn-secondary" style="padding: 8px 16px; font-size: 12px;" onclick="renderAdminData()">Refresh Data</button>
                     </div>
                 </div>
                 <div style="overflow-x: auto; padding: 10px;">
@@ -100,9 +100,12 @@ $isSheetsConfigured = $sheets->isConfigured();
 .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 8px; overflow: hidden; position: relative; }
 .progress-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease, background-color 0.5s ease; }
 
-.action-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; transition: all 0.2s; }
+.action-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; transition: all 0.2s; min-width: 32px; text-align: center; }
 .action-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2); }
 .action-btn.active { background: #14b8a6; color: white; border-color: #14b8a6; }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spinning { animation: spin 1s linear infinite; display: inline-block; }
 </style>
 
 <script>
@@ -110,13 +113,30 @@ const STATUS_CONFIG = {
     'pending': { label: 'Pending', icon: '⏳', progress: 20, class: 'status-pending', color: '#94a3b8' },
     'under_review': { label: 'Under Review', icon: '🔍', progress: 40, class: 'status-review', color: '#3b82f6' },
     'accepted': { label: 'Request Accepted!', icon: '✅', progress: 70, class: 'status-accepted', color: '#f59e0b' },
-    'success': { label: 'Success!', icon: '🔥', progress: 100, class: 'status-success', color: '#10b8a green' },
+    'success': { label: 'Success!', icon: '🔥', progress: 100, class: 'status-success', color: '#10b981' },
     'rejected': { label: 'Reject!', icon: '❌', progress: 100, class: 'status-rejected', color: '#ef4444' }
 };
 
-function renderAdminData() {
-    const bookings = JSON.parse(localStorage.getItem('appointments') || '[]');
-    const messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+const IS_SHEETS_CONFIGURED = <?php echo $isSheetsConfigured ? 'true' : 'false'; ?>;
+
+async function renderAdminData() {
+    const refreshBtn = document.getElementById('refresh-btn');
+    refreshBtn.disabled = true;
+    refreshBtn.innerHTML = '<span class="spinning">🔄</span> Syncing...';
+
+    let bookings = JSON.parse(localStorage.getItem('appointments') || '[]');
+    let messages = JSON.parse(localStorage.getItem('contact_messages') || '[]');
+
+    if (IS_SHEETS_CONFIGURED) {
+        try {
+            const resp = await fetch('/api/get-data'); // We need to add this endpoint
+            const data = await resp.json();
+            if (data.bookings) bookings = data.bookings;
+            if (data.messages) messages = data.messages;
+        } catch (e) {
+            console.error('Failed to fetch from Sheets:', e);
+        }
+    }
     
     // Stats
     document.getElementById('stat-bookings').textContent = bookings.length;
@@ -128,7 +148,7 @@ function renderAdminData() {
     const tableBody = document.getElementById('admin-bookings-table');
     tableBody.innerHTML = bookings.length ? '' : '<tr><td colspan="5" style="padding: 40px; text-align: center; color: rgba(255,255,255,0.3);">No bookings found</td></tr>';
     
-    bookings.sort((a,b) => b.id - a.id).forEach(b => {
+    bookings.sort((a,b) => (b.id || 0) - (a.id || 0)).forEach(b => {
         const currentStatus = b.status || 'pending';
         const config = STATUS_CONFIG[currentStatus] || STATUS_CONFIG['pending'];
         
@@ -152,11 +172,11 @@ function renderAdminData() {
             </td>
             <td style="padding: 16px;">
                 <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                    <button class="action-btn ${currentStatus === 'pending' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'pending')">P</button>
-                    <button class="action-btn ${currentStatus === 'under_review' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'under_review')">R</button>
-                    <button class="action-btn ${currentStatus === 'accepted' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'accepted')">A</button>
-                    <button class="action-btn ${currentStatus === 'success' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'success')">S</button>
-                    <button class="action-btn ${currentStatus === 'rejected' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'rejected')">X</button>
+                    <button class="action-btn ${currentStatus === 'pending' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'pending')" title="Pending">P</button>
+                    <button class="action-btn ${currentStatus === 'under_review' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'under_review')" title="Review">R</button>
+                    <button class="action-btn ${currentStatus === 'accepted' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'accepted')" title="Accepted">A</button>
+                    <button class="action-btn ${currentStatus === 'success' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'success')" title="Success">S</button>
+                    <button class="action-btn ${currentStatus === 'rejected' ? 'active' : ''}" onclick="updateBookingStatus(${b.id}, 'rejected')" title="Reject">X</button>
                 </div>
             </td>
             <td style="padding: 16px; text-align: right;">
@@ -188,18 +208,26 @@ function renderAdminData() {
         `;
         msgContainer.appendChild(card);
     });
+
+    refreshBtn.disabled = false;
+    refreshBtn.textContent = 'Refresh Data';
 }
 
-function updateBookingStatus(id, newStatus) {
+async function updateBookingStatus(id, newStatus) {
+    if (IS_SHEETS_CONFIGURED) {
+        await fetch('/api/update-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, status: newStatus })
+        });
+    }
+
+    // Always update local for instant feedback
     const bookings = JSON.parse(localStorage.getItem('appointments') || '[]');
     const index = bookings.findIndex(b => b.id === id);
     if (index !== -1) {
         bookings[index].status = newStatus;
         localStorage.setItem('appointments', JSON.stringify(bookings));
-        
-        // If Google Sheets is implemented on backend, we would call an API here
-        // fetch('/api/update-status', { method: 'POST', body: JSON.stringify({id, status: newStatus}) });
-        
         renderAdminData();
     }
 }
