@@ -14,7 +14,21 @@ $isSheetsConfigured = $sheets->isConfigured();
             <div>
                 <h1 style="font-size: 18px; font-weight: 800;">Admin Dashboard</h1>
                 <p style="font-size: 12px; color: rgba(255,255,255,0.4);">
-                    <?php echo $isSheetsConfigured ? '🟢 Connected to Google Sheets' : '🟠 Using Local Storage (Setup Google Sheets for shared data)'; ?>
+                    <?php
+if ($isSheetsConfigured) {
+    echo '<span style="color: #10b981;">🟢 Connected to Google Sheets</span>';
+}
+else {
+    $error = $sheets->getInitError();
+    echo '<span style="color: #f59e0b;">🟠 Using Local Storage</span>';
+    if ($error) {
+        echo '<br><span style="color: #f87171; font-size: 10px; opacity: 0.8;">Error: ' . htmlspecialchars($error) . '</span>';
+    }
+    else {
+        echo '<br><span style="font-size: 10px; opacity: 0.6;">(Setup Google Sheets for shared data)</span>';
+    }
+}
+?>
                 </p>
             </div>
         </div>
