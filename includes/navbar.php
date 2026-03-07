@@ -59,6 +59,13 @@
                     <span class="lang-en hidden">Book</span>
                     <span class="lang-bn">বুক</span>
                 </button>
+                
+                <!-- Track Status (Desktop) -->
+                <button onclick="toggleTrackModal(true)" class="btn-secondary desktop-nav hover-scale" style="padding: 8px 16px; font-size: 13px; border-radius: 10px; height: 36px; display: flex; align-items: center; gap: 6px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
+                    <span class="lang-en hidden">Track</span>
+                    <span class="lang-bn">ট্র্যাক</span>
+                </button>
 
                 <!-- Hamburger -->
                 <button id="mobile-menu-btn" style="background: none; color: var(--text-primary); padding: 4px; border: none; outline: none; cursor: pointer;" class="md:hidden">
@@ -104,10 +111,15 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     6295051584
                 </a>
-                <button onclick="toggleBookingModal(true); toggleMobileMenu(false);" class="btn-primary" style="padding: 10px 16px; font-size: 14px; border-radius: 10px;">
+                <button onclick="toggleBookingModal(true); toggleMobileMenu(false);" class="btn-primary" style="padding: 10px 16px; font-size: 14px; border-radius: 10px; justify-content: center; flex: 1;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-                    <span class="lang-en hidden">Book Appointment</span>
+                    <span class="lang-en hidden">Book Appt</span>
                     <span class="lang-bn">অ্যাপয়েন্টমেন্ট</span>
+                </button>
+                <button onclick="toggleTrackModal(true); toggleMobileMenu(false);" class="btn-secondary" style="padding: 10px 16px; font-size: 14px; border-radius: 10px; justify-content: center; flex: 1;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
+                    <span class="lang-en hidden">Track Status</span>
+                    <span class="lang-bn">অবস্থা দেখুন</span>
                 </button>
             </div>
         </div>

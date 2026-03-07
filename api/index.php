@@ -83,6 +83,34 @@ if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   sendJSON(['success' => $success]);
 }
 
+if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+  
+  if (empty($data['phone'])) {
+    sendJSON(['success' => false, 'error' => 'Phone number is required.']);
+  }
+  
+  $phone = filter_var($data['phone'], FILTER_SANITIZE_STRING);
+  
+  if ($db->isConnected()) {
+      $bookings = $db->query(
+          "SELECT status, name, service, booking_date as date, booking_time as time, created_at 
+           FROM bookings 
+           WHERE phone = ? 
+           ORDER BY created_at DESC LIMIT 1",
+          [$phone]
+      );
+      
+      if (!empty($bookings) && count($bookings) > 0) {
+          sendJSON(['success' => true, 'data' => $bookings[0]]);
+      } else {
+          sendJSON(['success' => false, 'error' => 'No booking found.']);
+      }
+  } else {
+       sendJSON(['success' => false, 'error' => 'Database connection failed.']);
+  }
+}
+
 $activePage = 'home';
 $language = 'bn'; // default language
 $theme = 'light';
@@ -176,6 +204,7 @@ else {
 if ($activePage !== 'admin' && $activePage !== 'login') {
   include __DIR__ . '/../includes/footer.php';
   include __DIR__ . '/../includes/booking-dialog.php';
+  include __DIR__ . '/../includes/track-status-dialog.php';
 }
 ?>
     </div>

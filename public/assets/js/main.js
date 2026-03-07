@@ -406,3 +406,169 @@ document.addEventListener('DOMContentLoaded', initServiceFiltering);
 themeToggleBtn?.addEventListener('click', toggleTheme);
 langToggleBtn?.addEventListener('click', toggleLanguage);
 mobileMenuBtn?.addEventListener('click', () => toggleMobileMenu());
+
+// === Track Status Logic ===
+function toggleTrackModal(show) {
+    const modal = document.getElementById('track-dialog');
+    if (!modal) return;
+    
+    if (show) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; 
+        
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            const content = modal.querySelector('#track-modal-content');
+            if(content) {
+                content.style.transform = 'translateY(0) scale(1)';
+                content.style.opacity = '1';
+            }
+        }, 10);
+    } else {
+        modal.style.opacity = '0';
+        const content = modal.querySelector('#track-modal-content');
+        if(content) {
+            content.style.transform = 'translateY(20px) scale(0.95)';
+            content.style.opacity = '0';
+        }
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            resetTrackForm();
+        }, 300);
+    }
+}
+
+function resetTrackForm() {
+    const phoneInput = document.getElementById('track-phone');
+    if(phoneInput) phoneInput.value = '';
+    const errSpan = document.getElementById('err-track');
+    if(errSpan) errSpan.style.display = 'none';
+    
+    document.getElementById('track-form-container')?.classList.remove('hidden');
+    document.getElementById('track-loading')?.classList.add('hidden');
+    document.getElementById('track-result')?.classList.add('hidden');
+    document.getElementById('track-not-found')?.classList.add('hidden');
+}
+
+async function submitTrack() {
+    const phoneInput = document.getElementById('track-phone');
+    const errSpan = document.getElementById('err-track');
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    
+    if(errSpan) errSpan.style.display = 'none';
+    
+    if (!phone || phone.length < 10) {
+        if(errSpan) {
+            errSpan.textContent = currentLanguage === 'en' ? 'Please enter a valid 10-digit number' : 'দয়া করে একটি বৈধ ১০-সংখ্যার নম্বর লিখুন';
+            errSpan.style.display = 'block';
+        }
+        return;
+    }
+    
+    document.getElementById('track-form-container')?.classList.add('hidden');
+    document.getElementById('track-loading')?.classList.remove('hidden');
+    
+    try {
+        const response = await fetch('/api/track-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone })
+        });
+        
+        const result = await response.json();
+        
+        document.getElementById('track-loading')?.classList.add('hidden');
+        
+        if (result.success && result.data) {
+            renderTrackResult(result.data);
+            document.getElementById('track-result')?.classList.remove('hidden');
+        } else {
+            document.getElementById('track-not-found')?.classList.remove('hidden');
+        }
+        
+    } catch (error) {
+        console.error('Error tracking status:', error);
+        document.getElementById('track-loading')?.classList.add('hidden');
+        if(errSpan) {
+            errSpan.textContent = currentLanguage === 'en' ? 'Server error. Try again later.' : 'সার্ভার ত্রুটি। পরে আবার চেষ্টা করুন।';
+            errSpan.style.display = 'block';
+        }
+        document.getElementById('track-form-container')?.classList.remove('hidden');
+    }
+}
+
+function renderTrackResult(data) {
+    document.getElementById('res-name').textContent = data.name;
+    document.getElementById('res-service').textContent = data.service;
+    
+    const dateObj = new Date(data.date);
+    const dateStr = dateObj.toLocaleDateString(currentLanguage === 'en' ? 'en-US' : 'bn-IN', {
+        day: 'numeric', month: 'short', year: 'numeric'
+    });
+    
+    document.getElementById('res-date').textContent = dateStr;
+    document.getElementById('res-time').textContent = data.time;
+    
+    const status = data.status || 'pending';
+    const badge = document.getElementById('res-badge');
+    
+    const steps = ['pending', 'review', 'final'];
+    steps.forEach(id => {
+        const el = document.getElementById(`step-${id}`);
+        if(el) el.className = 'progress-step';
+    });
+    
+    const finalStep = document.getElementById('step-final');
+    const finalTitle = document.getElementById('step-final-title');
+    const finalDesc = document.getElementById('step-final-desc');
+    
+    if (status === 'pending') {
+        badge.textContent = 'Pending';
+        badge.style.background = 'var(--surface)';
+        badge.style.color = 'var(--text-secondary)';
+        badge.style.borderColor = 'var(--border)';
+        
+        document.getElementById('step-pending')?.classList.add('active');
+        finalTitle.textContent = currentLanguage === 'en' ? 'Final Status' : 'চূড়ান্ত অবস্থা';
+        finalDesc.textContent = currentLanguage === 'en' ? 'Pending decision.' : 'সিদ্ধান্তের অপেক্ষায়।';
+        
+    } else if (status === 'under_review') {
+        badge.textContent = 'Under Review';
+        badge.style.background = 'rgba(59,130,246,0.1)';
+        badge.style.color = '#3b82f6';
+        badge.style.borderColor = 'rgba(59,130,246,0.2)';
+        
+        document.getElementById('step-pending')?.classList.add('completed');
+        document.getElementById('step-review')?.classList.add('active');
+        finalTitle.textContent = currentLanguage === 'en' ? 'Final Status' : 'চূড়ান্ত অবস্থা';
+        finalDesc.textContent = currentLanguage === 'en' ? 'Pending decision.' : 'সিদ্ধান্তের অপেক্ষায়।';
+        
+    } else if (status === 'accepted' || status === 'success') {
+        badge.textContent = status === 'success' ? 'Successful' : 'Accepted';
+        badge.style.background = status === 'success' ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
+        badge.style.color = status === 'success' ? '#10b981' : '#f59e0b';
+        badge.style.borderColor = status === 'success' ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)';
+        
+        document.getElementById('step-pending')?.classList.add('completed');
+        document.getElementById('step-review')?.classList.add('completed');
+        if(finalStep) finalStep.classList.add('active', 'accepted'); 
+        
+        finalTitle.textContent = currentLanguage === 'en' ? 'Approved' : 'অনুমোদিত';
+        finalDesc.textContent = currentLanguage === 'en' ? 'Request processed successfully.' : 'অনুরোধ সফলভাবে প্রক্রিয়া করা হয়েছে।';
+        
+    } else if (status === 'rejected') {
+        badge.textContent = 'Rejected';
+        badge.style.background = 'rgba(239,68,68,0.1)';
+        badge.style.color = '#ef4444';
+        badge.style.borderColor = 'rgba(239,68,68,0.2)';
+        
+        document.getElementById('step-pending')?.classList.add('completed');
+        document.getElementById('step-review')?.classList.add('completed');
+        if(finalStep) finalStep.classList.add('active', 'rejected');
+        
+        finalTitle.textContent = currentLanguage === 'en' ? 'Rejected' : 'বাতিল';
+        finalDesc.textContent = currentLanguage === 'en' ? 'Could not be completed.' : 'সম্পূর্ণ করা যায়নি।';
+    }
+}
