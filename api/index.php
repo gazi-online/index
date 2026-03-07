@@ -84,6 +84,8 @@ if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  ob_clean(); // Force clear any leading whitespace/HTML
+  
   $data = json_decode(file_get_contents('php://input'), true);
   
   if (empty($data['phone'])) {
