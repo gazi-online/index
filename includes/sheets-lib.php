@@ -53,10 +53,6 @@ class GoogleSheetsDB
             }
 
             $decoded['private_key'] = $key;
-
-            // Diagnostics (Safe)
-            $hasNewlines = strpos($key, "\n") !== false;
-            $this->initError = "Key Check: Len=" . strlen($key) . " Newlines=" . ($hasNewlines ? "Yes" : "No");
         }
 
         try {
