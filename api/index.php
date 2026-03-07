@@ -136,6 +136,16 @@ elseif ($path === '/logout') {
       /* Additional styles for the admin dashboard/login */
       .glass { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); }
     </style>
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      })();
+    </script>
   </head>
   <body class="transition-colors duration-300">
     <div id="root-php">
