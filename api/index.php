@@ -18,17 +18,17 @@ $theme = 'light';
   </head>
   <body class="transition-colors duration-300">
     <div id="root-php">
-      <?php include 'includes/navbar.php'; ?>
+      <?php include __DIR__ . '/../includes/navbar.php'; ?>
       
       <main>
-        <?php include 'includes/hero.php'; ?>
-        <?php include 'includes/services.php'; ?>
-        <?php include 'includes/reviews.php'; ?>
-        <?php include 'includes/contact.php'; ?>
+        <?php include __DIR__ . '/../includes/hero.php'; ?>
+        <?php include __DIR__ . '/../includes/services.php'; ?>
+        <?php include __DIR__ . '/../includes/reviews.php'; ?>
+        <?php include __DIR__ . '/../includes/contact.php'; ?>
       </main>
 
-      <?php include 'includes/footer.php'; ?>
-      <?php include 'includes/booking-dialog.php'; ?>
+      <?php include __DIR__ . '/../includes/footer.php'; ?>
+      <?php include __DIR__ . '/../includes/booking-dialog.php'; ?>
     </div>
 
     <!-- Main JavaScript Logic -->
