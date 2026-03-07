@@ -3,14 +3,7 @@
     "api/index.php": { "runtime": "vercel-php@0.7.2" }
   },
   "routes": [
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/logo.png",
-      "dest": "/logo.png"
-    },
+    { "handle": "filesystem" },
     {
       "src": "/(.*)",
       "dest": "/api/index.php"
