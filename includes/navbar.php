@@ -85,14 +85,20 @@
                 <span class="lang-bn">যোগাযোগ</span>
             </button>
             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-            <a href="/admin" style="display: block; width: 100%; text-align: left; color: #14b8a6; padding: 12px 0; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--border);">
+            <a href="/admin" style="display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; color: #14b8a6; padding: 12px 0; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--border);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 Admin Dashboard
             </a>
-            <a href="/logout" style="display: block; width: 100%; text-align: left; color: #f87171; padding: 12px 0; font-size: 15px; font-weight: 700; text-decoration: none;">
+            <a href="/logout" style="display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; color: #f87171; padding: 12px 0; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--border);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
                 Logout
             </a>
-            <?php
-endif; ?>
+            <?php else: ?>
+            <a href="/login" style="display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; color: var(--text-primary); padding: 12px 0; font-size: 15px; font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--border);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Admin Login
+            </a>
+            <?php endif; ?>
             <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
                 <a href="tel:6295051584" class="btn-secondary" style="padding: 10px 16px; font-size: 14px; border-radius: 10px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
