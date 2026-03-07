@@ -67,15 +67,9 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $data = json_decode(file_get_contents('php://input'), true);
   $success = false;
-  $error = "Sheets not configured";
+  $error = $sheets->getInitError() ?: "Sheets not configured";
 
-  if (!getenv('GOOGLE_CREDENTIALS'))
-    $error = "Missing GOOGLE_CREDENTIALS";
-  elseif (!getenv('GOOGLE_SPREADSHEET_ID'))
-    $error = "Missing GOOGLE_SPREADSHEET_ID";
-  elseif (!$sheets->isConfigured())
-    $error = "Service not initialized (JSON error?)";
-  else {
+  if ($sheets->isConfigured()) {
     $res = $sheets->appendRow('Bookings', [
       $data['id'], $data['name'], $data['phone'], $data['service'],
       $data['date'], $data['time'], $data['notes'], 'pending', date('Y-m-d H:i:s')

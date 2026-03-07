@@ -7,20 +7,26 @@ class GoogleSheetsDB
 {
     private $service;
     private $spreadsheetId;
+    private $initError = null;
 
     public function __construct()
     {
-        $credentialsJson = getenv('GOOGLE_CREDENTIALS');
-        $this->spreadsheetId = getenv('GOOGLE_SPREADSHEET_ID');
+        $credentialsJson = $_ENV['GOOGLE_CREDENTIALS'] ?? getenv('GOOGLE_CREDENTIALS');
+        $this->spreadsheetId = $_ENV['GOOGLE_SPREADSHEET_ID'] ?? getenv('GOOGLE_SPREADSHEET_ID');
 
-        if (!$credentialsJson || !$this->spreadsheetId) {
+        if (!$credentialsJson) {
+            $this->initError = "Missing GOOGLE_CREDENTIALS";
+            return;
+        }
+        if (!$this->spreadsheetId) {
+            $this->initError = "Missing GOOGLE_SPREADSHEET_ID";
             return;
         }
 
         try {
             $creds = json_decode($credentialsJson, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                error_log("Google Sheets Error: Invalid JSON in GOOGLE_CREDENTIALS");
+                $this->initError = "Invalid JSON in GOOGLE_CREDENTIALS: " . json_last_error_msg();
                 return;
             }
 
@@ -30,8 +36,13 @@ class GoogleSheetsDB
             $this->service = new \Google\Service\Sheets($client);
         }
         catch (Exception $e) {
-            error_log("Google Sheets Init Error: " . $e->getMessage());
+            $this->initError = "Exception: " . $e->getMessage();
         }
+    }
+
+    public function getInitError()
+    {
+        return $this->initError;
     }
 
     public function isConfigured()
