@@ -218,6 +218,6 @@ if ($activePage !== 'admin' && $activePage !== 'login') {
     </div>
 
     <!-- Main JavaScript Logic -->
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/main.js?v=2"></script>
   </body>
 </html>
