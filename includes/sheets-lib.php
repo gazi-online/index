@@ -33,9 +33,15 @@ class GoogleSheetsDB
         $decoded = json_decode($credentialsJson, true);
         if ($decoded === null) {
             // Try unescaping if first attempt failed
-            $credentialsJson = str_replace(['\\n', '\\"'], ["\n", '"'], $credentialsJson);
-            $decoded = json_encode(json_decode($credentialsJson, true), true); // Re-validate
-            $decoded = json_decode($credentialsJson, true);
+            $tempJson = str_replace('\\n', "\n", $credentialsJson);
+            $tempJson = str_replace('\\"', '"', $tempJson);
+            $decoded = json_decode($tempJson, true);
+        }
+
+        // CRITICAL FIX for "OpenSSL unable to validate key":
+        // Ensure the private_key contains actual newlines, not literal '\n' strings
+        if ($decoded && isset($decoded['private_key'])) {
+            $decoded['private_key'] = str_replace('\n', "\n", $decoded['private_key']);
         }
 
         try {
