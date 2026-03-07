@@ -111,6 +111,12 @@ if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
+// Ensure execution stops after handling API calls
+if (strpos($path, '/api/') === 0) {
+    http_response_code(404);
+    sendJSON(['success' => false, 'error' => 'API endpoint not found.']);
+}
+
 $activePage = 'home';
 $language = 'bn'; // default language
 $theme = 'light';
