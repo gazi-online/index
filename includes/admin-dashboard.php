@@ -160,23 +160,23 @@ async function renderAdminData() {
     
     // Bookings Table
     const tableBody = document.getElementById('admin-bookings-table');
-    tableBody.innerHTML = bookings.length ? '' : '<tr><td colspan="5" style="padding: 40px; text-align: center; color: rgba(255,255,255,0.3);">No bookings found</td></tr>';
+    tableBody.innerHTML = bookings.length ? '' : '<tr><td colspan="5" style="padding: 40px; text-align: center; color: var(--text-secondary); opacity: 0.3;">No bookings found</td></tr>';
     
     bookings.sort((a,b) => (b.id || 0) - (a.id || 0)).forEach(b => {
         const currentStatus = b.status || 'pending';
         const config = STATUS_CONFIG[currentStatus] || STATUS_CONFIG['pending'];
         
         const row = document.createElement('tr');
-        row.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+        row.style.borderBottom = '1px solid var(--border)';
         row.innerHTML = `
             <td style="padding: 16px;">
-                <div style="font-weight: 700; color: #f0fdf4; font-size: 14px;">${b.name}</div>
-                <div style="font-size: 11px; color: #14b8a6; font-weight: 600;">${b.service}</div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.4);">${b.phone}</div>
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 14px;">${b.name}</div>
+                <div style="font-size: 11px; color: var(--primary); font-weight: 600;">${b.service}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); opacity: 0.6;">${b.phone}</div>
             </td>
             <td style="padding: 16px;">
-                <div style="color: #f0fdf4;">${b.date}</div>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.5);">${b.time}</div>
+                <div style="color: var(--text-primary);">${b.date}</div>
+                <div style="font-size: 11px; color: var(--text-secondary); opacity: 0.7;">${b.time}</div>
             </td>
             <td style="padding: 16px;">
                 <div class="status-pill ${config.class}">${config.icon} ${config.label}</div>
@@ -202,21 +202,21 @@ async function renderAdminData() {
 
     // Messages container
     const msgContainer = document.getElementById('admin-messages-container');
-    msgContainer.innerHTML = messages.length ? '' : '<p style="color: rgba(255,255,255,0.3); text-align: center; grid-column: 1/-1;">No submissions yet.</p>';
+    msgContainer.innerHTML = messages.length ? '' : '<p style="color: var(--text-secondary); opacity: 0.3; text-align: center; grid-column: 1/-1;">No submissions yet.</p>';
     
     messages.sort((a,b) => new Date(b.sentAt) - new Date(a.sentAt)).forEach((m, idx) => {
         const card = document.createElement('div');
-        card.style.cssText = 'background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 24px; display: flex; flex-direction: column;';
+        card.style.cssText = 'background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column;';
         card.innerHTML = `
             <div style="display: flex; justify-content: space-between; margin-bottom: 16px; align-items: flex-start;">
                 <div>
-                    <p style="font-weight: 800; color: #f0fdf4; font-size: 15px;">${m.name}</p>
-                    <p style="font-size: 12px; color: #14b8a6;">${m.phone}</p>
+                    <p style="font-weight: 800; color: var(--text-primary); font-size: 15px;">${m.name}</p>
+                    <p style="font-size: 12px; color: var(--primary);">${m.phone}</p>
                 </div>
-                <p style="font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 600;">${new Date(m.sentAt).toLocaleDateString()}</p>
+                <p style="font-size: 10px; color: var(--text-secondary); opacity: 0.5; font-weight: 600;">${new Date(m.sentAt).toLocaleDateString()}</p>
             </div>
-            <p style="font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; font-style: italic; margin-bottom: 24px; flex-grow: 1;">"${m.message}"</p>
-            <div style="display: flex; align-items: center; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px;">
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-style: italic; margin-bottom: 24px; flex-grow: 1;">"${m.message}"</p>
+            <div style="display: flex; align-items: center; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 16px;">
                 <button style="background: none; border: none; color: #f87171; font-size: 11px; font-weight: 700; cursor: pointer;" onclick="deleteMessage(${idx})">Archive Message</button>
             </div>
         `;

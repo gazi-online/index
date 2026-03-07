@@ -138,7 +138,7 @@ elseif ($path === '/logout') {
     </style>
     <script>
       (function() {
-        const theme = localStorage.getItem('theme') || 'light';
+        const theme = localStorage.getItem('theme') || 'dark';
         if (theme === 'dark') {
           document.documentElement.setAttribute('data-theme', 'dark');
         } else {

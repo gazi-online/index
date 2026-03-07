@@ -1,7 +1,7 @@
 // main.js - Vanilla JS replacing React state and Framer Motion
 
 // State Variables
-let currentTheme = localStorage.getItem('theme') || 'light';
+let currentTheme = localStorage.getItem('theme') || 'dark';
 let currentLanguage = localStorage.getItem('lang') || 'bn';
 let isMenuOpen = false;
 
