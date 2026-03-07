@@ -41,7 +41,22 @@ class GoogleSheetsDB
         // CRITICAL FIX for "OpenSSL unable to validate key":
         // Ensure the private_key contains actual newlines, not literal '\n' strings
         if ($decoded && isset($decoded['private_key'])) {
-            $decoded['private_key'] = str_replace('\n', "\n", $decoded['private_key']);
+            $key = $decoded['private_key'];
+            // Handle multiple types of escaping that can happen on Vercel/pasting
+            $key = str_replace('\\n', "\n", $key);
+            $key = str_replace('\n', "\n", $key);
+            $key = trim($key);
+
+            // Ensure it has PEM wrappers
+            if (strpos($key, '-----BEGIN PRIVATE KEY-----') === false && strpos($key, '-----BEGIN') !== false) {
+            // It might be partially malformed PEM
+            }
+
+            $decoded['private_key'] = $key;
+
+            // Diagnostics (Safe)
+            $hasNewlines = strpos($key, "\n") !== false;
+            $this->initError = "Key Check: Len=" . strlen($key) . " Newlines=" . ($hasNewlines ? "Yes" : "No");
         }
 
         try {
