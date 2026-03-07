@@ -1,5 +1,6 @@
 <?php
 // Main entry point for Gazi Online PHP version
+ob_start();
 session_start();
 ini_set('display_errors', '0'); // CRITICAL: Prevents warnings from corrupting JSON
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
@@ -10,6 +11,15 @@ $sheets = new GoogleSheetsDB();
 // Simple Routing Logic
 $request_uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($request_uri, PHP_URL_PATH);
+
+// Helper for clean JSON responses
+function sendJSON($data)
+{
+  ob_clean();
+  header('Content-Type: application/json');
+  echo json_encode($data);
+  exit;
+}
 
 // API Endpoints
 if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -51,8 +61,7 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     }
   }
 
-  echo json_encode(['bookings' => $bookings, 'messages' => $messages]);
-  exit;
+  sendJSON(['bookings' => $bookings, 'messages' => $messages]);
 }
 
 if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
