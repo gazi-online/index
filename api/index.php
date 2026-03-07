@@ -26,15 +26,6 @@ function sendJSON($data)
 }
 
 // API Endpoints
-if ($path === '/api/check') {
-  sendJSON([
-    'status' => 'success',
-    'message' => 'API is active and updated!',
-    'time' => date('Y-m-d H:i:s'),
-    'database' => 'PostgreSQL (Supabase)'
-  ]);
-}
-
 if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
   $bookings = $db->query("SELECT id, name, service, phone, booking_date as date, booking_time as time, status FROM bookings ORDER BY created_at DESC");
   $messages = $db->query("SELECT name, phone, sent_at as \"sentAt\", message FROM messages ORDER BY sent_at DESC");
