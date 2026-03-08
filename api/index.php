@@ -132,7 +132,7 @@ if ($path === '/login') {
     $password = $_POST['password'] ?? '';
 
     // Hardcoded credentials for now
-    if ($username === 'admin' && $password === 'gazi_online_admin') {
+    if ($username === 'admin' && $password === 'Droidnur@9733') {
       $_SESSION['user_role'] = 'admin';
       header('Location: /admin');
       exit;
