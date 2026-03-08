@@ -5,6 +5,9 @@ session_start();
 ini_set('display_errors', '0'); // CRITICAL: Prevents warnings from corrupting JSON
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 
+// Cache raw input early — php://input can only be read once
+$raw_input = file_get_contents('php://input');
+
 include_once __DIR__ . '/../includes/db.php';
 $db = new Database();
 
@@ -38,7 +41,7 @@ if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-  $data = json_decode(file_get_contents('php://input'), true);
+  $data = json_decode($raw_input, true);
   $success = false;
   $error = $db->getError() ?: "Database not connected";
 
@@ -56,7 +59,7 @@ if ($path === '/api/booking' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($path === '/api/contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-  $data = json_decode(file_get_contents('php://input'), true);
+  $data = json_decode($raw_input, true);
   $success = false;
   $error = $db->getError() ?: "Database not connected";
   if ($db->isConnected()) {
@@ -126,13 +129,13 @@ if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   ob_clean(); // Force clear any leading whitespace/HTML
   
-  $data = json_decode(file_get_contents('php://input'), true);
+  $data = json_decode($raw_input, true);
   
   if (empty($data['phone'])) {
     sendJSON(['success' => false, 'error' => 'Phone number is required.']);
   }
   
-  $phone = filter_var($data['phone'], FILTER_SANITIZE_STRING);
+  $phone = trim(strip_tags($data['phone']));
   
   if ($db->isConnected()) {
       $bookings = $db->query(
