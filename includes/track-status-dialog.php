@@ -111,6 +111,17 @@ $today = date('Y-m-d');
                 </div>
 
                 <div style="margin-top: 24px; text-align: center;">
+                    <div id="track-document-container" class="hidden" style="margin-bottom: 16px; background: rgba(20,184,166,0.1); border: 1px dashed rgba(20,184,166,0.5); padding: 16px; border-radius: 12px;">
+                        <p style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">
+                            <span class="lang-en hidden">Attached Document 📎</span>
+                            <span class="lang-bn">সংযুক্ত নথি 📎</span>
+                        </p>
+                        <a id="track-document-link" href="#" target="_blank" class="btn-primary" style="padding: 8px 16px; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            <span class="lang-en hidden">Download</span>
+                            <span class="lang-bn">ডাউনলোড</span>
+                        </a>
+                    </div>
                     <button onclick="resetTrackForm()" style="background: none; border: none; color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline;">
                         <span class="lang-en hidden">Track another number</span>
                         <span class="lang-bn">আরেকটি নম্বর ট্র্যাক করুন</span>

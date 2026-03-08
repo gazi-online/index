@@ -41,7 +41,7 @@ else {
 
     <div style="max-width: 1400px; margin: 0 auto; padding: 40px;">
         <!-- Stats Row -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 40px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 24px;">
             <div class="glass" style="padding: 24px;">
                 <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Total Bookings</p>
                 <div style="display: flex; align-items: baseline; gap: 12px;">
@@ -58,6 +58,16 @@ else {
                 <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Success Rate</p>
                 <div style="display: flex; align-items: baseline; gap: 12px;">
                     <span style="font-size: 32px; font-weight: 800; color: #F59E0B;" id="stat-success">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Dashboard -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 40px;">
+            <div class="glass" style="padding: 24px; display: flex; flex-direction: column; align-items: center;">
+                <h3 style="font-size: 16px; font-weight: 700; width: 100%; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">📈 Booking Status Distribution</h3>
+                <div style="position: relative; height: 260px; width: 100%; display: flex; justify-content: center;">
+                    <canvas id="statusChart"></canvas>
                 </div>
             </div>
         </div>
@@ -103,6 +113,32 @@ else {
     </div>
 </div>
 
+<!-- Status Update Modal -->
+<div id="update-status-modal" class="modal-overlay hidden" style="opacity: 1;" onclick="if(event.target === this) document.getElementById('update-status-modal').classList.add('hidden')">
+    <div style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 20px; padding: 32px; width: 100%; max-width: 400px; position: relative;">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;" id="modal-status-title">Update Status</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">Upload an optional document for the user to download.</p>
+        
+        <form id="update-status-form" onsubmit="submitStatusUpdate(event)">
+            <input type="hidden" id="modal-booking-id">
+            <input type="hidden" id="modal-booking-status">
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Supporting Document (Optional)</label>
+                <input type="file" id="modal-document" name="document" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text-primary); font-size: 13px;">
+                <p style="font-size: 11px; color: var(--text-secondary); opacity: 0.7; margin-top: 6px;">Accepted formats: PDF, JPG, PNG, DOCX</p>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('update-status-modal').classList.add('hidden')">Cancel</button>
+                <button type="submit" class="btn-primary" id="modal-submit-btn">Confirm Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 .status-pill { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; }
 .status-pending { background: var(--surface); color: var(--text-secondary); border-color: var(--border); }
@@ -132,6 +168,7 @@ const STATUS_CONFIG = {
 };
 
 const IS_DB_CONNECTED = <?php echo $isConnected ? 'true' : 'false'; ?>;
+let statusChartInstance = null;
 
 async function renderAdminData() {
     const refreshBtn = document.getElementById('refresh-btn');
@@ -157,6 +194,9 @@ async function renderAdminData() {
     document.getElementById('stat-messages').textContent = messages.length;
     const successCount = bookings.filter(b => b.status === 'success').length;
     document.getElementById('stat-success').textContent = bookings.length ? Math.round((successCount/bookings.length)*100) + '%' : '0%';
+    
+    // Update Chart
+    updateChart(bookings);
     
     // Bookings Table
     const tableBody = document.getElementById('admin-bookings-table');
@@ -227,18 +267,97 @@ async function renderAdminData() {
     refreshBtn.textContent = 'Refresh Data';
 }
 
-async function updateBookingStatus(id, newStatus) {
+function updateChart(bookings) {
+    const counts = { pending: 0, under_review: 0, accepted: 0, success: 0, rejected: 0 };
+    bookings.forEach(b => { counts[b.status || 'pending']++; });
+
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    
+    if (statusChartInstance) {
+        statusChartInstance.data.datasets[0].data = Object.values(counts);
+        statusChartInstance.update();
+        return;
+    }
+
+    statusChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'Review', 'Accepted', 'Success', 'Rejected'],
+            datasets: [{
+                data: [counts.pending, counts.under_review, counts.accepted, counts.success, counts.rejected],
+                backgroundColor: ['#94a3b8', '#3b82f6', '#f59e0b', '#10b981', '#ef4444'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right', labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary').trim() || '#fff' } }
+            },
+            cutout: '70%'
+        }
+    });
+}
+
+function updateBookingStatus(id, newStatus) {
+    // If setting to success or rejected, show the modal for optional document upload
+    if (newStatus === 'success' || newStatus === 'rejected') {
+        const modal = document.getElementById('update-status-modal');
+        document.getElementById('modal-booking-id').value = id;
+        document.getElementById('modal-booking-status').value = newStatus;
+        document.getElementById('modal-status-title').textContent = newStatus === 'success' ? 'Mark as Success' : 'Mark as Rejected';
+        document.getElementById('modal-document').value = ''; // Reset file input
+        modal.classList.remove('hidden');
+        return;
+    }
+    
+    // Otherwise directly execute status update via executeStatusUpdate
+    executeStatusUpdate(id, newStatus, null);
+}
+
+async function submitStatusUpdate(e) {
+    e.preventDefault();
+    const id = document.getElementById('modal-booking-id').value;
+    const status = document.getElementById('modal-booking-status').value;
+    const fileInput = document.getElementById('modal-document');
+    const file = fileInput.files[0];
+    
+    const btn = document.getElementById('modal-submit-btn');
+    const origText = btn.textContent;
+    btn.textContent = 'Uploading...';
+    btn.disabled = true;
+
+    await executeStatusUpdate(id, status, file);
+    
+    document.getElementById('update-status-modal').classList.add('hidden');
+    btn.textContent = origText;
+    btn.disabled = false;
+}
+
+async function executeStatusUpdate(id, newStatus, file) {
     if (IS_DB_CONNECTED) {
-        await fetch('/api/update-status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, status: newStatus })
-        });
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('status', newStatus);
+        if (file) {
+            formData.append('document', file);
+        }
+
+        try {
+            await fetch('/api/update-status', {
+                method: 'POST',
+                body: formData // Fetch automatically sets multipart/form-data boundary
+            });
+        } catch (e) {
+            console.error("Update failed:", e);
+        }
     }
 
     // Always update local for instant feedback
     const bookings = JSON.parse(localStorage.getItem('appointments') || '[]');
-    const index = bookings.findIndex(b => b.id === id);
+    const index = bookings.findIndex(b => b.id == id);
     if (index !== -1) {
         bookings[index].status = newStatus;
         localStorage.setItem('appointments', JSON.stringify(bookings));

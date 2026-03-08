@@ -27,7 +27,7 @@ function sendJSON($data)
 
 // API Endpoints
 if ($path === '/api/get-data' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-  $bookings = $db->query("SELECT id, name, service, phone, booking_date as date, booking_time as time, status FROM bookings ORDER BY created_at DESC");
+  $bookings = $db->query("SELECT id, name, service, phone, booking_date as date, booking_time as time, status, document_path FROM bookings ORDER BY created_at DESC");
   $messages = $db->query("SELECT name, phone, sent_at as \"sentAt\", message FROM messages ORDER BY sent_at DESC");
 
   sendJSON([
@@ -72,15 +72,55 @@ if ($path === '/api/contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($path === '/api/update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-  $data = json_decode(file_get_contents('php://input'), true);
-  $success = false;
-  if ($db->isConnected()) {
-    $success = $db->execute(
-      "UPDATE bookings SET status = ? WHERE id = ?",
-      [$data['status'], $data['id']]
-    );
+  // Support both JSON (old way) and multipart/form-data (new way with file)
+  $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+  
+  if (strpos($contentType, 'application/json') !== false) {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $status = $data['status'] ?? null;
+    $id = $data['id'] ?? null;
+  } else {
+    $status = $_POST['status'] ?? null;
+    $id = $_POST['id'] ?? null;
   }
-  sendJSON(['success' => $success]);
+
+  $success = false;
+  $document_path = null;
+
+  if (isset($_FILES['document']) && $_FILES['document']['error'] === UPLOAD_ERR_OK) {
+      $uploadDir = __DIR__ . '/../public/uploads/';
+      if (!is_dir($uploadDir)) {
+          mkdir($uploadDir, 0777, true);
+      }
+      
+      $fileInfo = pathinfo($_FILES['document']['name']);
+      $ext = strtolower($fileInfo['extension'] ?? '');
+      $allowed = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+      
+      if (in_array($ext, $allowed)) {
+          $filename = 'doc_' . time() . '_' . uniqid() . '.' . $ext;
+          $targetPath = $uploadDir . $filename;
+          
+          if (move_uploaded_file($_FILES['document']['tmp_name'], $targetPath)) {
+              $document_path = '/uploads/' . $filename;
+          }
+      }
+  }
+
+  if ($db->isConnected() && $id && $status) {
+    if ($document_path) {
+        $success = $db->execute(
+        "UPDATE bookings SET status = ?, document_path = ? WHERE id = ?",
+        [$status, $document_path, $id]
+        );
+    } else {
+        $success = $db->execute(
+        "UPDATE bookings SET status = ? WHERE id = ?",
+        [$status, $id]
+        );
+    }
+  }
+  sendJSON(['success' => $success, 'document_path' => $document_path]);
 }
 
 if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -96,7 +136,7 @@ if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   
   if ($db->isConnected()) {
       $bookings = $db->query(
-          "SELECT status, name, service, booking_date as date, booking_time as time, created_at 
+          "SELECT status, name, service, booking_date as date, booking_time as time, created_at, document_path 
            FROM bookings 
            WHERE phone = ? 
            ORDER BY created_at DESC LIMIT 1",

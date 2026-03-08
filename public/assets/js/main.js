@@ -571,4 +571,15 @@ function renderTrackResult(data) {
         finalTitle.textContent = currentLanguage === 'en' ? 'Rejected' : 'বাতিল';
         finalDesc.textContent = currentLanguage === 'en' ? 'Could not be completed.' : 'সম্পূর্ণ করা যায়নি।';
     }
+
+    // Document Link Logic
+    const docContainer = document.getElementById('track-document-container');
+    const docLink = document.getElementById('track-document-link');
+    if (data.document_path) {
+        docLink.href = data.document_path;
+        docContainer.classList.remove('hidden');
+    } else {
+        docContainer.classList.add('hidden');
+        docLink.href = '#';
+    }
 }
