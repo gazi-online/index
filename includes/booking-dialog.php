@@ -101,17 +101,8 @@ $today = date('Y-m-d');
                                 <option value="<?php echo $s; ?>"><?php echo $s; ?> / <?php echo $services_bn[$i]; ?></option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-
-                    <div id="bk-otp-section" style="margin-bottom: 16px; display: none; padding-top: 16px; border-top: 1px solid var(--border);">
-                        <label class="booking-label">
-                            <span class="lang-en hidden">Enter 6-digit OTP sent to your phone</span>
-                            <span class="lang-bn">আপনার ফোনে পাঠানো ৬-সংখ্যার OTP লিখুন</span>
-                        </label>
-                        <span id="err-bk-otp" style="color: #f87171; font-size: 12px; margin-left: 4px; display: none;"></span>
-                        <input type="text" id="bk-otp" class="booking-input" placeholder="XXXXXX" maxlength="6" style="text-align: center; letter-spacing: 4px; font-weight: 700;">
-                    </div>
                 </div>
+
 
                 <!-- Step 2 -->
                 <div id="booking-step-2" class="booking-step hidden">

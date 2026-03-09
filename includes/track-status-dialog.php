@@ -35,25 +35,13 @@ $today = date('Y-m-d');
                     <div style="display: flex; gap: 10px;">
                         <input type="tel" id="track-phone" class="booking-input" placeholder="Enter 10-digit number" style="flex: 1;">
                         <button onclick="requestTrackOTP()" id="btn-track-submit" class="btn-primary" style="padding: 0 20px;">
-                            <span class="lang-en hidden">Get OTP</span><span class="lang-bn">OTP পান</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 24px; display: none;" id="track-otp-section">
-                    <label class="booking-label">
-                        <span class="lang-en hidden">Enter 6-digit OTP</span>
-                        <span class="lang-bn">৬-সংখ্যার OTP লিখুন</span>
-                    </label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="track-otp" class="booking-input" placeholder="XXXXXX" maxlength="6" style="flex: 1; text-align: center; letter-spacing: 4px; font-weight: 700;">
-                        <button onclick="submitTrack()" id="btn-otp-verify" class="btn-primary" style="padding: 0 20px;">
-                            <span class="lang-en hidden">Verify & Track</span><span class="lang-bn">যাচাই করুন</span>
+                            <span class="lang-en hidden">Track</span><span class="lang-bn">ট্র্যাক করুন</span>
                         </button>
                     </div>
                 </div>
                 <span id="err-track" style="color: #f87171; font-size: 13px; margin-top: 8px; display: none;"></span>
             </div>
+
 
             <!-- Loading State -->
             <div id="track-loading" class="hidden" style="text-align: center; padding: 40px 0;">

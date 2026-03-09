@@ -169,20 +169,8 @@ function resetBookingForm() {
     document.getElementById('bk-date').value = '';
     document.getElementById('bk-notes').value = '';
     
-    const otpInput = document.getElementById('bk-otp');
-    if(otpInput) otpInput.value = '';
-    const otpSection = document.getElementById('bk-otp-section');
-    if(otpSection) otpSection.style.display = 'none';
-    
     document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
     bookingData.time = '';
-    bookingData.otpSent = false;
-    bookingData.otpVerified = false;
-    
-    const btnNext = document.getElementById('btn-next');
-    if(btnNext) {
-        btnNext.innerHTML = `<span class="lang-en ${currentLanguage==='en'?'':'hidden'}">Continue</span><span class="lang-bn ${currentLanguage==='bn'?'':'hidden'}">পরবর্তী</span> →`;
-    }
     
     clearErrors();
 }
@@ -286,87 +274,7 @@ function updateBookingUI() {
     }
 }
 
-async function bookingNext() {
-    if (bookingStep === 1) {
-        if (!validateStep()) return;
-        
-        if (!bookingData.otpVerified) {
-            const phone = document.getElementById('bk-phone').value;
-            const btnNext = document.getElementById('btn-next');
-            
-            if (!bookingData.otpSent) {
-                // Send OTP
-                btnNext.disabled = true;
-                btnNext.innerHTML = currentLanguage === 'en' ? 'Sending...' : 'পাঠানো হচ্ছে...';
-                
-                try {
-                    const response = await fetch('/api/otp-send', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone })
-                    });
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        bookingData.otpSent = true;
-                        document.getElementById('bk-otp-section').style.display = 'block';
-                        btnNext.innerHTML = currentLanguage === 'en' ? 'Verify OTP' : 'OTP যাচাই করুন';
-                    } else {
-                        showError('phone', result.error || 'Failed to send OTP');
-                        btnNext.innerHTML = `<span class="lang-en ${currentLanguage==='en'?'':'hidden'}">Continue</span><span class="lang-bn ${currentLanguage==='bn'?'':'hidden'}">পরবর্তী</span> →`;
-                    }
-                } catch (e) {
-                    showError('phone', 'Server error');
-                    btnNext.innerHTML = `<span class="lang-en ${currentLanguage==='en'?'':'hidden'}">Continue</span><span class="lang-bn ${currentLanguage==='bn'?'':'hidden'}">পরবর্তী</span> →`;
-                }
-                btnNext.disabled = false;
-                return;
-            } else {
-                // Verify OTP
-                const code = document.getElementById('bk-otp').value;
-                const errOtp = document.getElementById('err-bk-otp');
-                
-                if (!code || code.length !== 6) {
-                    errOtp.textContent = currentLanguage === 'en' ? 'Enter 6 digit OTP' : '৬ ডিজিট OTP লিখুন';
-                    errOtp.style.display = 'inline-block';
-                    return;
-                }
-                
-                btnNext.disabled = true;
-                btnNext.innerHTML = currentLanguage === 'en' ? 'Verifying...' : 'যাচাই হচ্ছে...';
-                
-                try {
-                    const response = await fetch('/api/otp-verify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone, code })
-                    });
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        bookingData.otpVerified = true;
-                        errOtp.style.display = 'none';
-                        // Proceed to next step
-                        bookingStep++;
-                        updateBookingUI();
-                        // Reset button for next steps
-                        btnNext.innerHTML = `<span class="lang-en ${currentLanguage==='en'?'':'hidden'}">Continue</span><span class="lang-bn ${currentLanguage==='bn'?'':'hidden'}">পরবর্তী</span> →`;
-                    } else {
-                        errOtp.textContent = result.error || 'Invalid OTP';
-                        errOtp.style.display = 'inline-block';
-                        btnNext.innerHTML = currentLanguage === 'en' ? 'Verify OTP' : 'OTP যাচাই করুন';
-                    }
-                } catch (e) {
-                    errOtp.textContent = 'Server error';
-                    errOtp.style.display = 'inline-block';
-                    btnNext.innerHTML = currentLanguage === 'en' ? 'Verify OTP' : 'OTP যাচাই করুন';
-                }
-                btnNext.disabled = false;
-                return;
-            }
-        }
-    }
-
+function bookingNext() {
     if (validateStep()) {
         bookingStep++;
         updateBookingUI();
@@ -560,49 +468,54 @@ async function requestTrackOTP() {
     const phoneInput = document.getElementById('track-phone');
     const errSpan = document.getElementById('err-track');
     const phone = phoneInput ? phoneInput.value.trim() : '';
-    
-    if(errSpan) errSpan.style.display = 'none';
-    
+
+    if (errSpan) errSpan.style.display = 'none';
+
     if (!phone || phone.length < 10) {
-        if(errSpan) {
+        if (errSpan) {
             errSpan.textContent = currentLanguage === 'en' ? 'Please enter a valid 10-digit number' : 'দয়া করে একটি বৈধ ১০-সংখ্যার নম্বর লিখুন';
             errSpan.style.display = 'block';
         }
         return;
     }
-    
-    document.getElementById('btn-track-submit').textContent = currentLanguage === 'en' ? 'Sending...' : 'পাঠানো হচ্ছে...';
-    document.getElementById('btn-track-submit').disabled = true;
+
+    const btn = document.getElementById('btn-track-submit');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = currentLanguage === 'en' ? 'Searching...' : 'খোঁজা হচ্ছে...';
+    }
+
+    document.getElementById('track-form-container')?.classList.add('hidden');
+    document.getElementById('track-loading')?.classList.remove('hidden');
 
     try {
-        const response = await fetch('/api/otp-send', {
+        const response = await fetch('/api/track-status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone })
         });
-        
         const result = await response.json();
-        
-        document.getElementById('btn-track-submit').textContent = currentLanguage === 'en' ? 'Get OTP' : 'OTP পান';
-        document.getElementById('btn-track-submit').disabled = false;
 
-        if (result.success) {
-            document.getElementById('track-phone-section').style.display = 'none';
-            document.getElementById('track-otp-section').style.display = 'block';
+        document.getElementById('track-loading')?.classList.add('hidden');
+
+        if (result.success && result.data) {
+            renderTrackResult(result.data);
+            document.getElementById('track-result')?.classList.remove('hidden');
         } else {
-            if(errSpan) {
-                errSpan.textContent = result.error || 'Failed to send OTP.';
-                errSpan.style.display = 'block';
-            }
+            document.getElementById('track-not-found')?.classList.remove('hidden');
         }
-        
     } catch (error) {
-        console.error('Error sending OTP:', error);
-        document.getElementById('btn-track-submit').textContent = currentLanguage === 'en' ? 'Get OTP' : 'OTP পান';
-        document.getElementById('btn-track-submit').disabled = false;
-        if(errSpan) {
+        console.error('Error tracking status:', error);
+        document.getElementById('track-loading')?.classList.add('hidden');
+        document.getElementById('track-form-container')?.classList.remove('hidden');
+        if (errSpan) {
             errSpan.textContent = currentLanguage === 'en' ? 'Server error. Try again later.' : 'সার্ভার ত্রুটি। পরে আবার চেষ্টা করুন।';
             errSpan.style.display = 'block';
+        }
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = currentLanguage === 'en' ? 'Track' : 'ট্র্যাক করুন';
         }
     }
 }
