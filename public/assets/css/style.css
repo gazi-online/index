@@ -253,6 +253,58 @@ button {
   letter-spacing: 2px;
 }
 
+/* Modern Tailwind Animated Background Utility */
+.modern-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.modern-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle farthest-side at 50% 50%, rgba(20, 184, 166, 0.05) 0%, transparent 100%);
+}
+
+.modern-bg-blob {
+  position: absolute;
+  border-radius: 100%;
+  filter: blur(80px);
+  opacity: 0.08;
+  animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.modern-bg-teal {
+  background: var(--primary-light);
+  width: 50%;
+  height: 50%;
+  top: -10%;
+  left: -10%;
+}
+
+.modern-bg-blue {
+  background: var(--accent);
+  width: 40%;
+  height: 40%;
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10%, 15%) scale(1.1); }
+  66% { transform: translate(-5%, 20%) scale(0.9); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+[data-theme="dark"] .modern-bg-blob {
+  opacity: 0.12;
+}
+
 /* Status badges */
 .status-pending {
   background: rgba(245, 158, 11, 0.2);

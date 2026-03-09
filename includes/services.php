@@ -30,14 +30,19 @@ $services = [
     ['cat' => 'bills', 'icon' => 'Zap', 'color' => '#fbbf24', 'bg' => 'linear-gradient(135deg, rgba(251,191,36,0.15), rgba(217,119,6,0.05))', 'en' => 'Electricity Bill Payment', 'bn' => 'বিদ্যুৎ বিল পেমেন্ট', 'en_d' => 'Pay CESC, WBSEDCL and all electricity bills online instantly', 'bn_d' => 'CESC, WBSEDCL এবং সকল বিদ্যুৎ বিল তাৎক্ষণিকভাবে অনলাইনে পরিশোধ করুন'],
     ['cat' => 'bills', 'icon' => 'Phone', 'color' => '#f472b6', 'bg' => 'linear-gradient(135deg, rgba(244,114,182,0.15), rgba(219,39,119,0.05))', 'en' => 'Mobile & DTH Recharge', 'bn' => 'মোবাইল ও DTH রিচার্জ', 'en_d' => 'All operators: Jio, Airtel, Vi, BSNL, Tata Play, Dish TV and more', 'bn_d' => 'Jio, Airtel, Vi, BSNL, Tata Play, Dish TV সহ সকল অপারেটর রিচার্জ'],
     ['cat' => 'digital', 'icon' => 'Monitor', 'color' => '#22d3ee', 'bg' => 'linear-gradient(135deg, rgba(34,211,238,0.15), rgba(8,145,178,0.05))', 'en' => 'PhonePe & Google Pay', 'bn' => 'ফোনপে ও গুগল পে', 'en_d' => 'UPI transfers, QR payments and digital wallet top-ups with zero hassle', 'bn_d' => 'UPI ট্রান্সফার, QR পেমেন্ট এবং ডিজিটাল ওয়ালেট টপ-আপ ঝামেলামুক্তভাবে'],
-    ['cat' => 'digital', 'icon' => 'Camera', 'color' => '#e879f9', 'bg' => 'linear-gradient(135deg, rgba(232,121,249,0.15), rgba(168,85,247,0.05))', 'en' => 'Photo, Scan & Xerox', 'bn' => 'ফটো, স্ক্যান ও জেরক্স', 'en_d' => 'Passport photos, document scanning, photocopying and lamination services', 'bn_d' => 'পাসপোর্ট ছবি, ডকুমেন্ট স্ক্যান, ফটোকপি এবং ল্যামিনেশন সেবা'],
+    ['cat' => 'digital', 'icon' => 'Camera', 'color' => '#e879f9', 'bg' => 'linear-gradient(135deg, rgba(232,121,249,0.15), rgba(168,85,247,0.05))', 'en' => 'Photo, Scan & Xerox', 'bn' => 'ফ ফটো, স্ক্যান ও জেরক্স', 'en_d' => 'Passport photos, document scanning, photocopying and lamination services', 'bn_d' => 'পাসপোর্ট ছবি, ডকুমেন্ট স্ক্যান, ফটোকপি এবং ল্যামিনেশন সেবা'],
     ['cat' => 'digital', 'icon' => 'Wifi', 'color' => '#4ade80', 'bg' => 'linear-gradient(135deg, rgba(74,222,128,0.15), rgba(22,163,74,0.05))', 'en' => 'Internet & Broadband Help', 'bn' => 'ইন্টারনেট ও ব্রডব্যান্ড সহায়তা', 'en_d' => 'New broadband connection, renewal, complaints and ISP-related queries', 'bn_d' => 'নতুন ব্রডব্যান্ড সংযোগ, নবায়ন, অভিযোগ এবং ISP সম্পর্কিত পরামর্শ'],
     ['cat' => 'govt', 'icon' => 'ShieldCheck', 'color' => '#f97316', 'bg' => 'linear-gradient(135deg, rgba(249,115,22,0.15), rgba(194,65,12,0.05))', 'en' => 'Insurance Enrollment', 'bn' => 'বীমা নথিভুক্তি', 'en_d' => 'Pradhan Mantri life and accident insurance scheme enrollment and claims', 'bn_d' => 'প্রধানমন্ত্রী জীবন ও দুর্ঘটনা বীমা প্রকল্পে নথিভুক্তি ও দাবি প্রক্রিয়াকরণ'],
     ['cat' => 'banking', 'icon' => 'CreditCard', 'color' => '#818cf8', 'bg' => 'linear-gradient(135deg, rgba(129,140,248,0.15), rgba(67,56,202,0.05))', 'en' => 'Money Transfer (IMPS/NEFT)', 'bn' => 'অর্থ স্থানান্তর (IMPS/NEFT)', 'en_d' => 'Fast domestic money transfers 24/7 via IMPS, NEFT and RTGS channels', 'bn_d' => 'IMPS, NEFT এবং RTGS মাধ্যমে ২৪/৭ দ্রুত দেশীয় অর্থ স্থানান্তর'],
 ];
 ?>
-<section id="services" class="section">
-    <div class="container">
+<section id="services" class="relative overflow-hidden section" style="background: var(--bg-main);">
+    <!-- Modern Tailwind Animated Background -->
+    <div class="modern-bg">
+        <div class="modern-bg-blob modern-bg-teal" style="top: 20%; left: 10%;"></div>
+        <div class="modern-bg-blob modern-bg-blue" style="bottom: 20%; right: 10%;"></div>
+    </div>
+    <div class="container relative z-10">
         <div class="reveal reveal-up">
             <h2 class="section-title">
                 <span class="lang-en hidden">Our Services</span>

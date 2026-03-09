@@ -43,8 +43,13 @@ function getColor($name) {
     return $colors[ord($name[0]) % count($colors)];
 }
 ?>
-<section id="reviews" class="section" style="background: linear-gradient(180deg, transparent, var(--bg-main), transparent);">
-    <div class="container">
+<section id="reviews" class="relative overflow-hidden section" style="background: var(--surface);">
+    <!-- Modern Tailwind Animated Background -->
+    <div class="modern-bg">
+        <div class="modern-bg-blob modern-bg-teal" style="top: 30%; right: 5%;"></div>
+        <div class="modern-bg-blob modern-bg-blue" style="bottom: 10%; left: 5%;"></div>
+    </div>
+    <div class="container relative z-10">
         <div class="reveal reveal-up">
             <h2 class="section-title">
                 ⭐ 

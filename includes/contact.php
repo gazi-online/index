@@ -27,8 +27,13 @@ $contact_info = [
     ],
 ];
 ?>
-<section id="contact" class="section">
-    <div class="container">
+<section id="contact" class="relative overflow-hidden section" style="background: var(--bg-main);">
+    <!-- Modern Tailwind Animated Background -->
+    <div class="modern-bg">
+        <div class="modern-bg-blob modern-bg-teal" style="top: 10%; left: -5%;"></div>
+        <div class="modern-bg-blob modern-bg-blue" style="bottom: 10%; right: -5%;"></div>
+    </div>
+    <div class="container relative z-10">
         <div class="reveal reveal-up">
             <h2 class="section-title">
                 <span class="lang-en hidden">Contact & Location</span>
