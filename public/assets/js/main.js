@@ -31,12 +31,12 @@ function initTheme() {
 function applyTheme() {
     if (currentTheme === 'dark') {
         html.setAttribute('data-theme', 'dark');
-        iconSun.classList.remove('hidden');
-        iconMoon.classList.add('hidden');
+        if (iconSun) iconSun.classList.remove('hidden');
+        if (iconMoon) iconMoon.classList.add('hidden');
     } else {
         html.removeAttribute('data-theme');
-        iconSun.classList.add('hidden');
-        iconMoon.classList.remove('hidden');
+        if (iconSun) iconSun.classList.add('hidden');
+        if (iconMoon) iconMoon.classList.remove('hidden');
     }
 }
 
@@ -58,11 +58,11 @@ function applyLanguage() {
     if (currentLanguage === 'en') {
         enEls.forEach(el => el.classList.remove('hidden'));
         bnEls.forEach(el => el.classList.add('hidden'));
-        langIndicator.textContent = 'EN';
+        if (langIndicator) langIndicator.textContent = 'EN';
     } else {
         enEls.forEach(el => el.classList.add('hidden'));
         bnEls.forEach(el => el.classList.remove('hidden'));
-        langIndicator.textContent = 'বাংলা';
+        if (langIndicator) langIndicator.textContent = 'বাংলা';
     }
 }
 
@@ -74,6 +74,7 @@ function toggleLanguage() {
 
 // === Navbar Scroll ===
 window.addEventListener('scroll', () => {
+    if (!navbar) return;
     if (window.scrollY > 40) {
         navbar.classList.add('glass-strong', 'shadow-2xl', 'border-b', 'border-white/5');
         navbar.classList.remove('bg-transparent');
@@ -89,6 +90,7 @@ window.addEventListener('scroll', () => {
 
 // === Mobile Menu ===
 function toggleMobileMenu(forceState) {
+    if (!mobileMenu || !iconMenu || !iconClose) return;
     isMenuOpen = forceState !== undefined ? forceState : !isMenuOpen;
 
     if (isMenuOpen) {

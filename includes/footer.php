@@ -27,7 +27,7 @@ $footer_services = [
                 </p>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <?php foreach (['PhonePe', 'GPay', 'BHIM', 'UPI'] as $p): ?>
-                        <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; background: rgba(255,255,255,0.06); border-radius: 6px; color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.08);"><?php echo $p; ?></span>
+                        <span style="font-size: 10px; font-weight: 800; padding: 4px 10px; background: var(--surface); border-radius: 6px; color: var(--text-secondary); border: 1px solid var(--border); letter-spacing: 0.5px;"><?php echo $p; ?></span>
                     <?php endforeach; ?>
                 </div>
             </div>

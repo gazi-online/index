@@ -43,7 +43,7 @@ function getColor($name) {
     return $colors[ord($name[0]) % count($colors)];
 }
 ?>
-<section id="reviews" class="section" style="background: linear-gradient(180deg, transparent, var(--surface), transparent);">
+<section id="reviews" class="section" style="background: linear-gradient(180deg, transparent, var(--bg-main), transparent);">
     <div class="container">
         <div class="reveal reveal-up">
             <h2 class="section-title">
@@ -95,7 +95,7 @@ function getColor($name) {
         <!-- Review cards grid -->
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
             <?php foreach ($reviews as $index => $review): ?>
-            <div class="reveal reveal-up hover-float" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-card); transition-delay: <?php echo $index * 0.1; ?>s;">
+            <div class="reveal reveal-up hover-float" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-card); transition-delay: <?php echo $index * 0.1; ?>s;">
                 <!-- Stars -->
                 <div style="color: #F59E0B; font-size: 18px; letter-spacing: 3px; margin-bottom: 12px;">
                     <?php echo str_repeat('★', $review['rating']) . str_repeat('☆', 5 - $review['rating']); ?>

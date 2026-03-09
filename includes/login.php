@@ -1,4 +1,4 @@
-<div class="relative min-h-screen flex items-center justify-center overflow-hidden p-6 bg-slate-950">
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden p-6" style="background: var(--bg-main); color: var(--text-primary);">
     <!-- Modern Tailwind Animated Background -->
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_50%,_rgba(20,184,166,0.15)_0%,_transparent_100%)]"></div>
@@ -9,10 +9,10 @@
 
     <div class="relative z-10 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <!-- Left: Guidance Section -->
-        <div class="hidden md:flex flex-col space-y-6 text-white p-8">
+        <div class="hidden md:flex flex-col space-y-6 p-8">
             <div class="reveal reveal-up">
-                <h3 class="text-3xl font-black mb-4">Customer Support</h3>
-                <p class="text-slate-400 leading-relaxed mb-6">Welcome to the Gazi Online Management Portal. Below are some quick guides for our customers.</p>
+                <h3 class="text-3xl font-black mb-4" style="color: var(--text-primary);">Customer Support</h3>
+                <p class="leading-relaxed mb-6" style="color: var(--text-secondary);">Welcome to the Gazi Online Management Portal. Below are some quick guides for our customers.</p>
                 
                 <div class="space-y-4">
                     <div class="glass p-5 flex items-start gap-4 border-teal-500/20">
@@ -40,19 +40,19 @@
 
         <!-- Right: Login Form -->
         <div class="reveal reveal-up">
-            <div class="glass p-10 rounded-[32px] border-white/10 shadow-2xl">
+            <div class="glass p-10 rounded-[32px] shadow-2xl" style="background: var(--bg-card); border: 1px solid var(--border);">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
                         <img src="/logo.png" alt="Logo" class="w-10 h-10 object-contain">
                     </div>
                     
                     <!-- Main Heading & Mobile Number Side-by-Side Centered -->
-                    <h2 class="text-2xl font-black text-white flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-2">
+                    <h2 class="text-2xl font-black flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-2" style="color: var(--text-primary);">
                         <span>Gazi Online</span>
                         <span class="hidden sm:inline w-1.5 h-1.5 rounded-full bg-teal-500"></span>
                         <span class="text-teal-400">62950 51584</span>
                     </h2>
-                    <p class="text-slate-400 text-sm font-medium">Management Portal Login</p>
+                    <p class="text-sm font-medium" style="color: var(--text-secondary);">Management Portal Login</p>
                 </div>
 
                 <?php if (isset($login_error)): ?>
@@ -64,12 +64,12 @@
 
                 <form action="/login" method="POST" class="space-y-5">
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Username</label>
-                        <input type="text" name="username" required class="w-100 font-medium bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-600 block" style="width: 100%;">
+                        <label class="block text-xs font-bold uppercase tracking-widest mb-2 ml-1" style="color: var(--text-secondary);">Username</label>
+                        <input type="text" name="username" required class="w-100 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:border-teal-500 transition-all block" style="width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text-primary);">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">Password</label>
-                        <input type="password" name="password" required class="w-100 font-medium bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-600 block" style="width: 100%;">
+                        <label class="block text-xs font-bold uppercase tracking-widest mb-2 ml-1" style="color: var(--text-secondary);">Password</label>
+                        <input type="password" name="password" required class="w-100 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:border-teal-500 transition-all block" style="width: 100%; background: var(--surface); border: 1px solid var(--border); color: var(--text-primary);">
                     </div>
                     
                     <button type="submit" class="btn-primary w-full justify-center py-5 rounded-2xl text-lg font-bold mt-4 shadow-teal-500/20">

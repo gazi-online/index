@@ -61,16 +61,16 @@
                 </button>
                 
                 <!-- Track Status (Desktop) -->
-                <button onclick="toggleTrackModal(true)" class="btn-secondary desktop-nav hover-scale" style="padding: 8px 16px; font-size: 13px; border-radius: 10px; height: 36px; display: flex; align-items: center; gap: 6px;">
+                <button onclick="toggleTrackModal(true)" class="btn-secondary desktop-nav hover-scale" style="padding: 8px 16px; font-size: 13px; border-radius: 10px; height: 36px; display: flex; align-items: center; gap: 6px; border-color: var(--border);">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
                     <span class="lang-en hidden">Track</span>
                     <span class="lang-bn">ট্র্যাক</span>
                 </button>
 
                 <!-- Hamburger -->
-                <button id="mobile-menu-btn" style="background: none; color: var(--text-primary); padding: 4px; border: none; outline: none; cursor: pointer;" class="md:hidden">
-                    <span id="icon-menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></span>
-                    <span id="icon-close" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
+                <button id="mobile-menu-btn" style="background: var(--surface); color: var(--text-primary); padding: 8px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer;" class="md:hidden">
+                    <span id="icon-menu"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></span>
+                    <span id="icon-close" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
                 </button>
             </div>
         </div>

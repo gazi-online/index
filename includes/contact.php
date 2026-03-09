@@ -89,7 +89,7 @@ $contact_info = [
             </div>
 
             <!-- Contact form -->
-            <div class="glass reveal reveal-slide-left" style="padding: 32px;">
+            <div class="reveal reveal-slide-left" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-card);">
                 <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 24px; color: var(--text-primary);">
                     <span class="lang-en hidden">Send us a Message</span>
                     <span class="lang-bn">আমাদের বার্তা পাঠান</span>
@@ -161,6 +161,12 @@ $contact_info = [
         .contact-input {
             width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
             padding: 12px 16px; color: var(--text-primary); font-size: 14px; outline: none; font-family: 'Inter', sans-serif; box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        .contact-input:focus {
+            border-color: var(--primary);
+            background: var(--bg-main);
+            box-shadow: 0 0 0 4px var(--surface-hover);
         }
     </style>
 </section>

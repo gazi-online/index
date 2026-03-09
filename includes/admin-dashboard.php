@@ -6,36 +6,41 @@ $isConnected = $db->isConnected();
 ?>
 <div style="min-height: 100vh; background: var(--bg-main); color: var(--text-primary);">
     <!-- Sidebar / Topbar -->
-    <div style="padding: 24px 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
+    <div style="padding: 24px 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg-main); z-index: 50;">
         <div style="display: flex; align-items: center; gap: 16px;">
             <div style="padding: 8px; background: rgba(20,184,166,0.1); border-radius: 12px;">
                 <img src="/logo.png" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;">
             </div>
             <div>
-                <h1 style="font-size: 18px; font-weight: 800;">Admin Dashboard</h1>
-                <p style="font-size: 12px; color: var(--text-secondary);">
+                <h1 style="font-size: 18px; font-weight: 800; margin: 0;">Admin Dashboard</h1>
+                <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">
                     <?php
-if ($isConnected) {
-    echo '<span style="color: #10b981;">🟢 Connected to PostgreSQL (Supabase)</span>';
-}
-else {
-    $error = $db->getError();
-    echo '<span style="color: #f59e0b;">🟠 Using Local Storage</span>';
-    if ($error) {
-        echo '<br><span style="color: #f87171; font-size: 10px; opacity: 0.8;">Error: ' . htmlspecialchars($error) . '</span>';
-    }
-    else {
-        echo '<br><span style="font-size: 10px; opacity: 0.6;">(Database connection failed)</span>';
-    }
-}
-?>
+                    if ($isConnected) {
+                        echo '<span style="color: #10b981;">🟢 Connected to Database</span>';
+                    } else {
+                        echo '<span style="color: #f59e0b;">🟠 Offline Mode</span>';
+                    }
+                    ?>
                 </p>
             </div>
         </div>
         
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <a href="/" style="font-size: 13px; color: var(--text-secondary); text-decoration: none;" class="hover-scale">View Site</a>
-            <a href="/logout" style="padding: 10px 20px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); color: #f87171; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;" class="hover-scale">Logout</a>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="/" style="font-size: 13px; color: var(--text-secondary); text-decoration: none; margin-right: 8px;" class="hover-scale">View Site</a>
+            
+            <!-- Theme toggle -->
+            <button id="theme-toggle" class="hover-scale" style="display: flex; align-items: center; justify-content: center; background: var(--surface); border: 1px solid var(--border); color: var(--text-primary); width: 36px; height: 36px; border-radius: 10px; cursor: pointer;" title="Toggle Theme">
+                <span id="icon-sun" class="hidden"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+                <span id="icon-moon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+            </button>
+
+            <!-- Language toggle -->
+            <button id="lang-toggle" class="hover-scale" style="display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); color: var(--text-primary); padding: 0 12px; height: 36px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                <span id="lang-indicator">EN</span>
+            </button>
+
+            <a href="/logout" style="padding: 8px 16px; border-radius: 10px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); color: #f87171; font-size: 13px; font-weight: 700; text-decoration: none;" class="hover-scale">Logout</a>
         </div>
     </div>
 
@@ -142,17 +147,17 @@ else {
 <style>
 .status-pill { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; }
 .status-pending { background: var(--surface); color: var(--text-secondary); border-color: var(--border); }
-.status-review { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
-.status-accepted { background: rgba(245,158,11,0.1); color: #fbbf24; border-color: rgba(245,158,11,0.2); }
-.status-success { background: rgba(16,185,129,0.1); color: #34d399; border-color: rgba(16,185,129,0.2); }
-.status-rejected { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.2); }
+.status-review { background: rgba(59,130,246,0.1); color: #3b82f6; border-color: rgba(59,130,246,0.2); }
+.status-accepted { background: rgba(245,158,11,0.1); color: #d97706; border-color: rgba(245,158,11,0.2); }
+.status-success { background: rgba(16,185,129,0.1); color: #10b981; border-color: rgba(16,185,129,0.2); }
+.status-rejected { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
 
 .progress-track { width: 100%; height: 6px; background: var(--surface); border-radius: 10px; margin-top: 8px; overflow: hidden; position: relative; }
 .progress-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease, background-color 0.5s ease; }
 
 .action-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; transition: all 0.2s; min-width: 32px; text-align: center; }
-.action-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2); }
-.action-btn.active { background: #14b8a6; color: white; border-color: #14b8a6; }
+.action-btn:hover { background: var(--surface-hover); color: var(--text-primary); border-color: var(--primary); }
+.action-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .spinning { animation: spin 1s linear infinite; display: inline-block; }
@@ -294,7 +299,13 @@ function updateChart(bookings) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'right', labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary').trim() || '#fff' } }
+                legend: { 
+                    position: 'right', 
+                    labels: { 
+                        color: getComputedStyle(document.body).getPropertyValue('--text-primary').trim(),
+                        font: { family: 'Inter', size: 12 }
+                    } 
+                }
             },
             cutout: '70%'
         }

@@ -176,6 +176,12 @@ $today = date('Y-m-d');
         .booking-input {
             width: 100%; background: var(--surface); border: 1px solid var(--border);
             border-radius: 12px; padding: 12px 16px; color: var(--text-primary); font-size: 14px; outline: none; box-sizing: border-box; font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .booking-input:focus {
+            border-color: var(--primary);
+            background: var(--bg-main);
+            box-shadow: 0 0 0 4px var(--surface-hover);
         }
         .booking-label {
             display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;
