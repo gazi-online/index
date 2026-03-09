@@ -43,35 +43,6 @@ $hero_services = [
                 </a>
             </div>
 
-            <!-- Smart Help Section (Book, OTP, Track) -->
-            <div class="reveal reveal-up grid grid-cols-1 md:grid-cols-3 gap-4 py-8">
-                <!-- How to Book -->
-                <div class="hero-card p-6 rounded-3xl text-left transition-all" style="background: var(--bg-card); border: 1px solid var(--border);">
-                    <div class="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center mb-4 text-teal-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-                    </div>
-                    <h3 class="font-bold mb-2" style="color: var(--text-primary);">How to Book</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">Click 'Book' button, fill details, and confirm your slot instantly.</p>
-                </div>
-
-                <!-- How to get OTP -->
-                <div class="hero-card p-6 rounded-3xl text-left transition-all" style="background: var(--bg-card); border: 1px solid var(--border);">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center mb-4 text-amber-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
-                    </div>
-                    <h3 class="font-bold mb-2" style="color: var(--text-primary);">How to get OTP</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">Check your WhatsApp after booking. We send OTP for secure tracking.</p>
-                </div>
-
-                <!-- Track Status Button Inside Grid -->
-                <div onclick="toggleTrackModal(true)" class="hero-card p-6 rounded-3xl text-left cursor-pointer transition-all" style="background: var(--bg-card); border: 1px solid var(--border);">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-4 text-blue-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
-                    <h3 class="font-bold mb-2" style="color: var(--text-primary);">📍 Track Status</h3>
-                    <p class="text-sm" style="color: var(--text-secondary);">Real-time update on your application. Click here to check now.</p>
-                </div>
-            </div>
 
             <!-- Main CTA Area -->
             <div class="reveal reveal-up flex flex-wrap items-center justify-center gap-4">
