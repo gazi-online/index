@@ -21,7 +21,7 @@ $time_slots = [
 
 $today = date('Y-m-d');
 ?>
-<div id="booking-dialog" class="modal-overlay hidden" style="opacity: 1;" onclick="if(event.target === this) toggleBookingModal(false)">
+<div id="booking-dialog" class="modal-overlay hidden" style="opacity: 1;">
     <div id="booking-modal-content" style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
         <!-- Header -->
         <div style="padding: 28px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: var(--bg-main);">
@@ -94,6 +94,15 @@ $today = date('Y-m-d');
                                 <option value="<?php echo $s; ?>"><?php echo $s; ?> / <?php echo $services_bn[$i]; ?></option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+
+                    <div id="bk-otp-section" style="margin-bottom: 16px; display: none; padding-top: 16px; border-top: 1px solid var(--border);">
+                        <label class="booking-label">
+                            <span class="lang-en hidden">Enter 6-digit OTP sent to your phone</span>
+                            <span class="lang-bn">আপনার ফোনে পাঠানো ৬-সংখ্যার OTP লিখুন</span>
+                        </label>
+                        <span id="err-bk-otp" style="color: #f87171; font-size: 12px; margin-left: 4px; display: none;"></span>
+                        <input type="text" id="bk-otp" class="booking-input" placeholder="XXXXXX" maxlength="6" style="text-align: center; letter-spacing: 4px; font-weight: 700;">
                     </div>
                 </div>
 

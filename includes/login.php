@@ -19,21 +19,38 @@
         <?php
 endif; ?>
 
-        <form action="/login" method="POST" style="text-align: left;">
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Username</label>
-                <input type="text" name="username" required style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
+        <?php if (!empty($show_otp_form)): ?>
+            <div style="margin-bottom: 24px;">
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">An OTP has been sent to the Admin phone number. Please enter it below.</p>
+                <form action="/login" method="POST" style="text-align: left;">
+                    <div style="margin-bottom: 32px;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">6-digit OTP</label>
+                        <input type="text" name="otp_code" required maxlength="6" style="text-align: center; letter-spacing: 4px; font-weight: 700; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px;">
+                        Verify OTP
+                    </button>
+                    <a href="/login" style="display: block; text-align: center; margin-top: 16px; color: var(--text-secondary); font-size: 13px; text-decoration: none;">Cancel</a>
+                </form>
             </div>
-            <div style="margin-bottom: 32px;">
-                <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Password</label>
-                <input type="password" name="password" required style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
-            </div>
-            
-            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px;">
-                Sign In
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
-            </button>
-        </form>
+        <?php else: ?>
+            <form action="/login" method="POST" style="text-align: left;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Username</label>
+                    <input type="text" name="username" required style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
+                </div>
+                <div style="margin-bottom: 32px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">Password</label>
+                    <input type="password" name="password" required style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text-primary); outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary)'">
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px;">
+                    Sign In
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+                </button>
+            </form>
+        <?php endif; ?>
 
         <p style="margin-top: 32px; font-size: 13px; color: var(--text-secondary); opacity: 0.5;">
             &copy; <?php echo date('Y'); ?> Gazi Online Center. All rights reserved.

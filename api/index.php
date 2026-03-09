@@ -156,6 +156,102 @@ if ($path === '/api/track-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
+// --- OTP Endpoints using Fonnte API ---
+if ($path === '/api/otp-send' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  ob_clean();
+  $data = json_decode($raw_input, true);
+  $phone = trim(strip_tags($data['phone'] ?? ''));
+  
+  if (empty($phone)) {
+    sendJSON(['success' => false, 'error' => 'Phone number is required.']);
+  }
+
+  // Generate 6 digit OTP
+  $otp = sprintf("%06d", mt_rand(1, 999999));
+  
+  // Store in session with 10 min expiration
+  $_SESSION['otp_' . $phone] = [
+    'code' => $otp,
+    'expires' => time() + 600 // 10 minutes
+  ];
+
+  // Send via Fonnte
+  $token = $_ENV['FONNTE_TOKEN'] ?? '';
+  if (empty($token) || $token === 'YOUR_FONNTE_TOKEN_HERE') {
+    // For local testing if token is not set, just assume success and log it
+    error_log("OTP for $phone is $otp");
+    sendJSON(['success' => true, 'message' => 'OTP generated (Token not configured, check logs)']);
+  }
+
+  $message = "Your Gazi Online OTP code is: {$otp}. It is valid for 10 minutes.";
+  
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://api.fonnte.com/send',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS => array(
+      'target' => $phone,
+      'message' => $message,
+      'countryCode' => '91', // Assuming India, replace as needed
+    ),
+    CURLOPT_HTTPHEADER => array(
+      'Authorization: ' . $token
+    ),
+  ));
+
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  curl_close($curl);
+
+  if ($err) {
+    sendJSON(['success' => false, 'error' => 'cURL Error: ' . $err]);
+  } else {
+    $resData = json_decode($response, true);
+    if (isset($resData['status']) && $resData['status'] == true) {
+      sendJSON(['success' => true, 'message' => 'OTP sent successfully']);
+    } else {
+      sendJSON(['success' => false, 'error' => 'Fonnte API Error: ' . ($resData['reason'] ?? 'Unknown error')]);
+    }
+  }
+}
+
+if ($path === '/api/otp-verify' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  ob_clean();
+  $data = json_decode($raw_input, true);
+  $phone = trim(strip_tags($data['phone'] ?? ''));
+  $code = trim(strip_tags($data['code'] ?? ''));
+
+  if (empty($phone) || empty($code)) {
+    sendJSON(['success' => false, 'error' => 'Phone and OTP code are required.']);
+  }
+
+  if (isset($_SESSION['otp_' . $phone])) {
+    $sessionOtp = $_SESSION['otp_' . $phone];
+    
+    if (time() > $sessionOtp['expires']) {
+      unset($_SESSION['otp_' . $phone]);
+      sendJSON(['success' => false, 'error' => 'OTP has expired. Please request a new one.']);
+    }
+    
+    if ($sessionOtp['code'] === $code) {
+      // Mark as verified
+      $_SESSION['otp_verified_' . $phone] = true;
+      unset($_SESSION['otp_' . $phone]);
+      sendJSON(['success' => true, 'message' => 'OTP verified successfully.']);
+    } else {
+      sendJSON(['success' => false, 'error' => 'Invalid OTP code.']);
+    }
+  } else {
+    sendJSON(['success' => false, 'error' => 'No OTP request found for this number.']);
+  }
+}
+
 // Ensure execution stops after handling API calls
 if (strpos($path, '/api/') === 0) {
     http_response_code(404);
@@ -171,17 +267,69 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 if ($path === '/login') {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
+    if (isset($_POST['otp_code'])) {
+        // Step 2: OTP Verification
+        $code = trim($_POST['otp_code']);
+        $admin_phone = "916295051584";
+        
+        if (isset($_SESSION['pending_admin_login']) && isset($_SESSION['otp_' . $admin_phone])) {
+            $sessionOtp = $_SESSION['otp_' . $admin_phone];
+            if (time() > $sessionOtp['expires']) {
+                $login_error = "OTP expired. Please login again.";
+                unset($_SESSION['pending_admin_login']);
+            } elseif ($sessionOtp['code'] === $code) {
+                $_SESSION['user_role'] = 'admin';
+                unset($_SESSION['pending_admin_login']);
+                unset($_SESSION['otp_' . $admin_phone]);
+                header('Location: /admin');
+                exit;
+            } else {
+                $login_error = "Invalid OTP code.";
+                $show_otp_form = true;
+            }
+        } else {
+            $login_error = "Session expired. Please login again.";
+        }
+    } else {
+        // Step 1: Username & Password
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-    // Hardcoded credentials for now
-    if ($username === 'admin' && $password === 'Droidnur@9733') {
-      $_SESSION['user_role'] = 'admin';
-      header('Location: /admin');
-      exit;
-    }
-    else {
-      $login_error = "Invalid username or password.";
+        // Hardcoded credentials for now
+        if ($username === 'admin' && $password === 'Droidnur@9733') {
+            $_SESSION['pending_admin_login'] = true;
+            
+            // Generate Admin OTP
+            $otp = sprintf("%06d", mt_rand(1, 999999));
+            $admin_phone = "916295051584";
+            
+            $_SESSION['otp_' . $admin_phone] = [
+                'code' => $otp,
+                'expires' => time() + 600
+            ];
+            
+            // Send Fonnte message
+            $token = $_ENV['FONNTE_TOKEN'] ?? '';
+            if (empty($token) || $token === 'YOUR_FONNTE_TOKEN_HERE') {
+                error_log("Admin OTP is $otp");
+            } else {
+                $message = "Gazi Online Admin Login OTP: {$otp}. Valid for 10 mins.";
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.fonnte.com/send',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array('target' => $admin_phone, 'message' => $message),
+                    CURLOPT_HTTPHEADER => array('Authorization: ' . $token),
+                ));
+                curl_exec($curl);
+                curl_close($curl);
+            }
+            
+            $show_otp_form = true;
+        } else {
+            $login_error = "Invalid username or password.";
+        }
     }
   }
   $activePage = 'login';

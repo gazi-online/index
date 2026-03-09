@@ -30,7 +30,7 @@ $hero_services = [
         </div>
 
         <!-- Main heading -->
-        <h1 class="reveal reveal-up" style="font-size: clamp(40px, 8vw, 80px); font-weight: 900; line-height: 1.05; margin-bottom: 16px; transition-delay: 0.1s;">
+        <h1 class="reveal reveal-up glass" style="font-size: clamp(40px, 8vw, 80px); font-weight: 900; line-height: 1.05; margin-bottom: 16px; transition-delay: 0.1s; padding: 24px 32px; border-radius: 32px; display: inline-block;">
             <span style="display: inline-flex; align-items: center; gap: 12px; justify-content: center; vertical-align: middle;">
                 <img src="/logo.png" alt="" style="width: clamp(40px, 8vw, 70px); height: clamp(40px, 8vw, 70px); object-fit: contain;" />
                 Gazi Online

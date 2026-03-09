@@ -3,7 +3,7 @@
 
 $today = date('Y-m-d');
 ?>
-<div id="track-dialog" class="modal-overlay hidden" style="opacity: 1;" onclick="if(event.target === this) toggleTrackModal(false)">
+<div id="track-dialog" class="modal-overlay hidden" style="opacity: 1;">
     <div id="track-modal-content" style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
         <!-- Header -->
         <div style="padding: 28px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: var(--bg-main);">
@@ -27,19 +27,32 @@ $today = date('Y-m-d');
             
             <!-- Search Form -->
             <div id="track-form-container">
-                <div style="margin-bottom: 24px;">
+                <div style="margin-bottom: 24px;" id="track-phone-section">
                     <label class="booking-label"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 
                         <span class="lang-en hidden">Registered Mobile Number</span>
                         <span class="lang-bn">নিবন্ধিত মোবাইল নম্বর</span>
                     </label>
                     <div style="display: flex; gap: 10px;">
                         <input type="tel" id="track-phone" class="booking-input" placeholder="Enter 10-digit number" style="flex: 1;">
-                        <button onclick="submitTrack()" id="btn-track-submit" class="btn-primary" style="padding: 0 20px;">
-                            <span class="lang-en hidden">Track</span><span class="lang-bn">ট্র্যাক</span>
+                        <button onclick="requestTrackOTP()" id="btn-track-submit" class="btn-primary" style="padding: 0 20px;">
+                            <span class="lang-en hidden">Get OTP</span><span class="lang-bn">OTP পান</span>
                         </button>
                     </div>
-                    <span id="err-track" style="color: #f87171; font-size: 13px; margin-top: 8px; display: none;"></span>
                 </div>
+
+                <div style="margin-bottom: 24px; display: none;" id="track-otp-section">
+                    <label class="booking-label">
+                        <span class="lang-en hidden">Enter 6-digit OTP</span>
+                        <span class="lang-bn">৬-সংখ্যার OTP লিখুন</span>
+                    </label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="track-otp" class="booking-input" placeholder="XXXXXX" maxlength="6" style="flex: 1; text-align: center; letter-spacing: 4px; font-weight: 700;">
+                        <button onclick="submitTrack()" id="btn-otp-verify" class="btn-primary" style="padding: 0 20px;">
+                            <span class="lang-en hidden">Verify & Track</span><span class="lang-bn">যাচাই করুন</span>
+                        </button>
+                    </div>
+                </div>
+                <span id="err-track" style="color: #f87171; font-size: 13px; margin-top: 8px; display: none;"></span>
             </div>
 
             <!-- Loading State -->
