@@ -3,7 +3,7 @@
 
 $today = date('Y-m-d');
 ?>
-<div id="track-dialog" class="modal-overlay hidden" style="opacity: 1;">
+<div id="track-dialog" class="modal-overlay hidden" style="opacity: 0; transition: opacity 0.3s;">
     <div id="track-modal-content" style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
         <!-- Header -->
         <div style="padding: 28px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: var(--bg-main);">

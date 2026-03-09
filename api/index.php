@@ -306,7 +306,7 @@ elseif ($path === '/logout') {
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/assets/css/style.css?v=4" />
+    <link rel="stylesheet" href="/assets/css/style.css?v=5" />
     <style>
       /* Additional styles for the admin dashboard/login */
       .glass { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--glass-border); }
@@ -357,6 +357,6 @@ if ($activePage !== 'admin' && $activePage !== 'login') {
     </div>
 
     <!-- Main JavaScript Logic -->
-    <script src="/assets/js/main.js?v=4"></script>
+    <script src="/assets/js/main.js?v=5"></script>
   </body>
 </html>

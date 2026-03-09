@@ -21,8 +21,8 @@ $time_slots = [
 
 $today = date('Y-m-d');
 ?>
-<div id="booking-dialog" class="modal-overlay hidden" style="opacity: 1;">
-    <div id="booking-modal-content" class="relative glass-strong p-6 sm:p-10 w-full max-w-xl max-h-[90vh] overflow-y-auto transform scale-95 opacity-0 transition-all duration-300">
+<div id="booking-dialog" class="modal-overlay hidden" style="opacity: 0; transition: opacity 0.3s;">
+    <div id="booking-modal-content" class="relative glass-strong p-6 sm:p-10 w-full max-w-xl max-h-[90vh] overflow-y-auto">
         <!-- Modern Tailwind Animated Background -->
         <div class="modern-bg">
             <div class="modern-bg-blob modern-bg-teal" style="top: -10%; left: -10%; width: 70%; height: 70%;"></div>
