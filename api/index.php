@@ -267,69 +267,17 @@ $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
 
 if ($path === '/login') {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['otp_code'])) {
-        // Step 2: OTP Verification
-        $code = trim($_POST['otp_code']);
-        $admin_phone = "916295051584";
-        
-        if (isset($_SESSION['pending_admin_login']) && isset($_SESSION['otp_' . $admin_phone])) {
-            $sessionOtp = $_SESSION['otp_' . $admin_phone];
-            if (time() > $sessionOtp['expires']) {
-                $login_error = "OTP expired. Please login again.";
-                unset($_SESSION['pending_admin_login']);
-            } elseif ($sessionOtp['code'] === $code) {
-                $_SESSION['user_role'] = 'admin';
-                unset($_SESSION['pending_admin_login']);
-                unset($_SESSION['otp_' . $admin_phone]);
-                header('Location: /admin');
-                exit;
-            } else {
-                $login_error = "Invalid OTP code.";
-                $show_otp_form = true;
-            }
-        } else {
-            $login_error = "Session expired. Please login again.";
-        }
-    } else {
-        // Step 1: Username & Password
-        $username = $_POST['username'] ?? '';
-        $password = $_POST['password'] ?? '';
+    // Basic Username & Password Login (requested to remove OTP)
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-        // Hardcoded credentials for now
-        if ($username === 'admin' && $password === 'Droidnur@9733') {
-            $_SESSION['pending_admin_login'] = true;
-            
-            // Generate Admin OTP
-            $otp = sprintf("%06d", mt_rand(1, 999999));
-            $admin_phone = "916295051584";
-            
-            $_SESSION['otp_' . $admin_phone] = [
-                'code' => $otp,
-                'expires' => time() + 600
-            ];
-            
-            // Send Fonnte message
-            $token = $_ENV['FONNTE_TOKEN'] ?? '';
-            if (empty($token) || $token === 'YOUR_FONNTE_TOKEN_HERE') {
-                error_log("Admin OTP is $otp");
-            } else {
-                $message = "Gazi Online Admin Login OTP: {$otp}. Valid for 10 mins.";
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://api.fonnte.com/send',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => array('target' => $admin_phone, 'message' => $message),
-                    CURLOPT_HTTPHEADER => array('Authorization: ' . $token),
-                ));
-                curl_exec($curl);
-                curl_close($curl);
-            }
-            
-            $show_otp_form = true;
-        } else {
-            $login_error = "Invalid username or password.";
-        }
+    // Hardcoded credentials for now
+    if ($username === 'admin' && $password === 'Droidnur@9733') {
+        $_SESSION['user_role'] = 'admin';
+        header('Location: /admin');
+        exit;
+    } else {
+        $login_error = "Invalid username or password.";
     }
   }
   $activePage = 'login';
