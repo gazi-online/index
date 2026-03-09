@@ -22,7 +22,14 @@ $time_slots = [
 $today = date('Y-m-d');
 ?>
 <div id="booking-dialog" class="modal-overlay hidden" style="opacity: 1;">
-    <div id="booking-modal-content" style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
+    <div id="booking-modal-content" class="relative overflow-hidden" style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 24px; padding: 0; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; transition: transform 0.3s, opacity 0.3s;">
+        <!-- Modern Tailwind Animated Background -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_50%,_rgba(20,184,166,0.05)_0%,_transparent_100%)]"></div>
+            <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/5 blur-[80px] animate-pulse"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/5 blur-[80px] animate-pulse-slow"></div>
+        </div>
+        
         <!-- Header -->
         <div style="padding: 28px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; background: var(--bg-main);">
             <div>
@@ -198,7 +205,9 @@ $today = date('Y-m-d');
         }
         .confirm-label { color: var(--text-secondary); }
         .confirm-val { color: var(--text-primary); font-weight: 600; }
-        .booking-step { animation: fadeIn 0.3s; }
+        .booking-step { animation: fadeIn 0.3s; position: relative; z-index: 1; }
         @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .animate-pulse-slow { animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
     </style>
 </div>

@@ -1,11 +1,5 @@
 <div class="relative min-h-screen flex items-center justify-center overflow-hidden p-6" style="background: var(--bg-main); color: var(--text-primary);">
-    <!-- Modern Tailwind Animated Background -->
-    <div class="absolute inset-0 z-0">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_50%,_rgba(20,184,166,0.15)_0%,_transparent_100%)]"></div>
-        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-        <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] animate-pulse-slow"></div>
-    </div>
+    
 
     <div class="relative z-10 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <!-- Left: Guidance Section -->

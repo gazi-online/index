@@ -4,7 +4,13 @@ include_once __DIR__ . '/db.php';
 $db = new Database();
 $isConnected = $db->isConnected();
 ?>
-<div style="min-height: 100vh; background: var(--bg-main); color: var(--text-primary);">
+<div class="relative overflow-hidden" style="min-height: 100vh; background: var(--bg-main); color: var(--text-primary);">
+    <!-- Modern Tailwind Animated Background -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_50%,_rgba(20,184,166,0.05)_0%,_transparent_100%)]"></div>
+        <div class="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] rounded-full bg-teal-500/5 blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] rounded-full bg-blue-600/5 blur-[120px] animate-pulse-slow"></div>
+    </div>
     <!-- Sidebar / Topbar -->
     <div style="padding: 24px 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg-main); z-index: 50;">
         <div style="display: flex; align-items: center; gap: 16px;">
@@ -161,6 +167,9 @@ $isConnected = $db->isConnected();
 
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .spinning { animation: spin 1s linear infinite; display: inline-block; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.animate-pulse-slow { animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.glass { position: relative; z-index: 1; }
 </style>
 
 <script>
